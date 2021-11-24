@@ -7,7 +7,7 @@ using namespace glb;
 
 
 
-void disable_all()
+bool disable_all()
 {
     static bool disabled = false;
     static bool first_press = true;
@@ -20,14 +20,15 @@ void disable_all()
         }
     }
     else first_press = true;
+    return disabled;
 }
 
 void arcade_drive()
 {
     if(abs(con.get_analog(pros::E_CONTROLLER_ANALOG_LEFT_Y)) > 10 || abs(con.get_analog(pros::E_CONTROLLER_ANALOG_RIGHT_X)) > 10)
     {
-        chas::spin_left(con.get_analog(pros::E_CONTROLLER_ANALOG_LEFT_Y + pros::E_CONTROLLER_ANALOG_RIGHT_X));
-        chas::spin_right(con.get_analog(pros::E_CONTROLLER_ANALOG_LEFT_Y - pros::E_CONTROLLER_ANALOG_RIGHT_X));
+        chas::spin_left(con.get_analog(pros::E_CONTROLLER_ANALOG_LEFT_Y) + con.get_analog(pros::E_CONTROLLER_ANALOG_RIGHT_X));
+        chas::spin_right(con.get_analog(pros::E_CONTROLLER_ANALOG_LEFT_Y) - con.get_analog(pros::E_CONTROLLER_ANALOG_RIGHT_X));
     }
     else
     {
@@ -44,7 +45,7 @@ void tank_drive()
     }
     else
     {
-        chas::stop()
+        chas::stop();
     }
 }
 

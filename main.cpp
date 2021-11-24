@@ -40,6 +40,6 @@ void opcontrol()
         }
 
         delay(1);
-        timer += 1
+        timer += 1;
     }
 }

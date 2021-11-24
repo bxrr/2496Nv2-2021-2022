@@ -69,14 +69,14 @@ namespace glb
     #define P_IMU 7
 
     // chassis
-    pros::Motor left_front(P_LEFT_FRONT, pros::E_MOTOR_GEARSET_6, false);
-    pros::Motor left_mid_front(P_LEFT_MID_FRONT, pros::E_MOTOR_GEARSET_6, false);
-    pros::Motor left_mid_back(P_LEFT_MID_FRONT, pros::E_MOTOR_GEARSET_6, false);
-    pros::Motor left_back(P_LEFT_BACK, pros::E_MOTOR_GEARSET_6, false);
-    pros::Motor right_front(P_RIGHT_FRONT, pros::E_MOTOR_GEARSET_6, false);
-    pros::Motor right_mid_front(P_RIGHT_MID_FRONT, pros::E_MOTOR_GEARSET_6, false);
-    pros::Motor right_mid_back(P_RIGHT_MID_FRONT, pros::E_MOTOR_GEARSET_6, false);
-    pros::Motor right_back(P_RIGHT_BACK, pros::E_MOTOR_GEARSET_6, false);
+    pros::Motor left_front(P_LEFT_FRONT, pros::E_MOTOR_GEARSET_06, false);
+    pros::Motor left_mid_front(P_LEFT_MID_FRONT, pros::E_MOTOR_GEARSET_06, false);
+    pros::Motor left_mid_back(P_LEFT_MID_FRONT, pros::E_MOTOR_GEARSET_06, false);
+    pros::Motor left_back(P_LEFT_BACK, pros::E_MOTOR_GEARSET_06, false);
+    pros::Motor right_front(P_RIGHT_FRONT, pros::E_MOTOR_GEARSET_06, false);
+    pros::Motor right_mid_front(P_RIGHT_MID_FRONT, pros::E_MOTOR_GEARSET_06, false);
+    pros::Motor right_mid_back(P_RIGHT_MID_FRONT, pros::E_MOTOR_GEARSET_06, false);
+    pros::Motor right_back(P_RIGHT_BACK, pros::E_MOTOR_GEARSET_06, false);
     // misc
     pros::Imu imu(P_IMU);
     pros::Controller con(pros::E_CONTROLLER_MASTER);
@@ -109,13 +109,13 @@ namespace chas
 
     void stop()
     {
-        glb::spin_left(0);
-        glb::spin_right(0);
+        spin_left(0);
+        spin_right(0);
     }
 
     void set_brake(short int brake_num)
     {
-        auto brake_type;
+        auto brake_type = pros::E_MOTOR_BRAKE_COAST;
         if(brake_num == COAST) brake_type = pros::E_MOTOR_BRAKE_COAST;
         if(brake_num == HOLD) brake_type = pros::E_MOTOR_BRAKE_HOLD;
 

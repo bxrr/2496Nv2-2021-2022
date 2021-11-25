@@ -23,7 +23,7 @@ namespace obj
             extended = extend_val;
             pneu.set_value(extend_val);
         }
-        
+
         void toggle()
         {
             if(extended)
@@ -85,75 +85,102 @@ namespace glb
 
 
 // additional function groups ==================================================================
-#define COAST 0
-#define HOLD 1
-namespace chas
+enum BrakeType {coast, hold};
+enum Mode {all, chas, front};
+
+namespace mtr
 {
-    void spin_left(double speed, bool eight_motor=false) // value range from -127 to 127
+    void spin_left(double speed, Mode mode=all) // value range from -127 to 127
     {
-        if(eight_motor) glb::left_front.move(speed);
-        glb::left_mid_front.move(speed);
-        glb::left_mid_back.move(speed);
-        glb::left_back.move(speed);
+        if(mode != chas) glb::left_front.move(speed);
+        if(mode != front)
+        {
+            glb::left_mid_front.move(speed);
+            glb::left_mid_back.move(speed);
+            glb::left_back.move(speed);
+        }
     }
 
-    void spin_right(double speed, bool eight_motor)
+    void spin_right(double speed, Mode mode=all)
     {
-        if(eight_motor) glb::right_front.move(speed);
-        glb::right_mid_front.move(speed);
-        glb::right_mid_back.move(speed);
-        glb::right_back.move(speed);
+        if(mode != chas) glb::right_front.move(speed);
+        if(mode != front)
+        {
+            glb::right_mid_front.move(speed);
+            glb::right_mid_back.move(speed);
+            glb::right_back.move(speed);
+        }
     }
 
-    void stop(bool eight_motor=true)
+    void spin(double speed, Mode mode=all)
     {
-        spin_left(0, eight_motor);
-        spin_right(0, eight_motor);
+        spin_left(speed, mode);
+        spin_right(speed, mode);
     }
 
-    void stop_front()
+    void stop(Mode mode=all)
     {
-        glb::right_front.move(0);
-        glb::left_front.move(0);
+        spin_left(0, mode);
+        spin_right(0, mode);
     }
 
-    void spin_front(double speed)
-    {
-        glb::right_front.move(speed);
-        glb::left_front.move(speed);
-    }
-
-
-    void set_brake(short int brake_num) // COAST, HOLD
+    void set_brake(BrakeType type, Mode mode=all) // (COAST, HOLD) ()
     {
         auto brake_type = pros::E_MOTOR_BRAKE_COAST;
-        if(brake_num == COAST) brake_type = pros::E_MOTOR_BRAKE_COAST;
-        if(brake_num == HOLD) brake_type = pros::E_MOTOR_BRAKE_HOLD;
+        if(type == coast) brake_type = pros::E_MOTOR_BRAKE_COAST;
+        if(type == hold) brake_type = pros::E_MOTOR_BRAKE_HOLD;
 
-        glb::left_front.set_brake_mode(brake_type);
-        glb::left_mid_front.set_brake_mode(brake_type);
-        glb::left_mid_back.set_brake_mode(brake_type);
-        glb::left_back.set_brake_mode(brake_type);
-        glb::right_front.set_brake_mode(brake_type);
-        glb::right_mid_front.set_brake_mode(brake_type);
-        glb::right_mid_back.set_brake_mode(brake_type);
-        glb::right_back.set_brake_mode(brake_type);
+        if(mode != chas)
+        {
+            glb::left_front.set_brake_mode(brake_type);
+            glb::right_front.set_brake_mode(brake_type);
+        }
+        if(mode != front)
+        {
+            glb::left_mid_front.set_brake_mode(brake_type);
+            glb::left_mid_back.set_brake_mode(brake_type);
+            glb::left_back.set_brake_mode(brake_type);
+            glb::right_mid_front.set_brake_mode(brake_type);
+            glb::right_mid_back.set_brake_mode(brake_type);
+            glb::right_back.set_brake_mode(brake_type);
+        }
     }
 
-    double left_pos()
+    BrakeType get_brake(Mode mode=chas)
     {
-        return (glb::left_front.get_position() + glb::left_mid_front.get_position() + glb::left_mid_back.get_position() + glb::left_back.get_position()) / 4;
+        if(mode == chas)
+        {
+            if(pros::E_MOTOR_BRAKE_COAST == glb::left_mid_front.get_brake_mode()) return coast;
+            else return hold;
+        } 
+        else
+        {
+            if(pros::E_MOTOR_BRAKE_COAST == glb::left_front.get_brake_mode()) return coast;
+            else return hold;
+        }
     }
 
-    double right_pos()
+    double left_pos(Mode mode=chas)
     {
-        return (glb::right_front.get_position() + glb::right_mid_front.get_position() + glb::right_mid_back.get_position() + glb::right_back.get_position()) / 4;
+        if(mode == front) return glb::left_front.get_position();
+        else if(mode == chas) return (glb::left_mid_front.get_position() + glb::left_mid_back.get_position() + glb::left_back.get_position()) / 3;
+        else return (glb::left_front.get_position() + glb::left_mid_front.get_position() + glb::left_mid_back.get_position() + glb::left_back.get_position()) / 4;
     }
 
-    double get_temp()
+    double right_pos(Mode mode=chas)
     {
-        return (glb::left_front.get_temperature() + glb::left_mid_front.get_temperature() + glb::left_mid_back.get_temperature() + glb::left_back.get_temperature() + 
-                glb::right_front.get_temperature() + glb::right_mid_front.get_temperature() + glb::right_mid_back.get_temperature() + glb::right_back.get_temperature()) / 8;
+        if(mode == front) return glb::right_front.get_position();
+        else if(mode == chas) return (glb::right_mid_front.get_position() + glb::right_mid_back.get_position() + glb::right_back.get_position()) / 3;
+        else return (glb::right_front.get_position() + glb::right_mid_front.get_position() + glb::right_mid_back.get_position() + glb::right_back.get_position()) / 4;
+    }
+
+    double get_temp(Mode mode=chas)
+    {
+        double front_avg = (glb::left_front.get_temperature() + glb::right_front.get_temperature()) / 2;
+        double chas_avg = (glb::left_mid_front.get_temperature() + glb::left_mid_back.get_temperature() + glb::left_back.get_temperature() + glb::right_mid_front.get_temperature() + glb::right_mid_back.get_temperature() + glb::right_back.get_temperature()) / 6;
+        if(mode == front) return front_avg;
+        else if(mode == chas) return chas_avg;
+        else return front_avg + chas_avg;
     }
 }
 

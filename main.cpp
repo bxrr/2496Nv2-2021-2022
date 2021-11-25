@@ -9,7 +9,7 @@ void initialize()
 {
     con.clear();
     pros::lcd::set_text(0, "2496NextLevelNinjas");
-    chas::set_brake(COAST);
+    mtr::set_brake(coast);
 }
 
 void disabled() {}
@@ -28,15 +28,16 @@ void opcontrol()
         disabled = disable_all();
         if(!disabled)
         {
+            // control functions in here
             arcade_drive(PTO_control());
-            chainbar_control(PTO_control());
+            chainbar_control();
         }
         else
         {
             glb::con.clear();
             if(timer % 100 == 0) glb::con.set_text(1, 0, "DISABLED");
             
-            chas::stop();
+            mtr::stop();
         }
 
         pros::delay(1);

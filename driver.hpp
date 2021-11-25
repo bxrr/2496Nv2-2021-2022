@@ -23,29 +23,37 @@ bool disable_all()
     return disabled;
 }
 
-void arcade_drive(bool eight_motor)
+void arcade_drive(bool all_motors)
 {
+    Mode mode = all;
+    if(all_motors) mode = all;
+    else mode = chas;
+    
     if(abs(con.get_analog(pros::E_CONTROLLER_ANALOG_LEFT_Y)) > 10 || abs(con.get_analog(pros::E_CONTROLLER_ANALOG_RIGHT_X)) > 10)
     {
-        chas::spin_left(con.get_analog(pros::E_CONTROLLER_ANALOG_LEFT_Y) + con.get_analog(pros::E_CONTROLLER_ANALOG_RIGHT_X), eight_motor);
-        chas::spin_right(con.get_analog(pros::E_CONTROLLER_ANALOG_LEFT_Y) - con.get_analog(pros::E_CONTROLLER_ANALOG_RIGHT_X), eight_motor);
+        mtr::spin_left(con.get_analog(pros::E_CONTROLLER_ANALOG_LEFT_Y) + con.get_analog(pros::E_CONTROLLER_ANALOG_RIGHT_X), mode);
+        mtr::spin_right(con.get_analog(pros::E_CONTROLLER_ANALOG_LEFT_Y) - con.get_analog(pros::E_CONTROLLER_ANALOG_RIGHT_X), mode);
     }
     else
     {
-        chas::stop(eight_motor);
+        mtr::stop(mode);
     }
 }
 
-void tank_drive(bool eight_motor)
+void tank_drive(bool all_motors)
 {
+    Mode mode = all;
+    if(all_motors) mode = all;
+    else mode = chas;
+    
     if(abs(con.get_analog(pros::E_CONTROLLER_ANALOG_LEFT_Y)) > 10 || abs(con.get_analog(pros::E_CONTROLLER_ANALOG_RIGHT_Y)) > 10)
     {
-        chas::spin_left(con.get_analog(pros::E_CONTROLLER_ANALOG_LEFT_Y), eight_motor);
-        chas::spin_right(con.get_analog(pros::E_CONTROLLER_ANALOG_RIGHT_Y), eight_motor);
+        mtr::spin_left(con.get_analog(pros::E_CONTROLLER_ANALOG_LEFT_Y), mode);
+        mtr::spin_right(con.get_analog(pros::E_CONTROLLER_ANALOG_RIGHT_Y), mode);
     }
     else
     {
-        chas::stop(eight_motor);
+        mtr::stop(mode);
     }
 }
 
@@ -59,7 +67,7 @@ bool PTO_control()
             first_press = false;
             glb::left_PTO.set(false);
             glb::right_PTO.set(false);
-            chas::stop_front();
+            mtr::stop(front);
         }
     }
     else first_press = true;
@@ -71,16 +79,16 @@ void chainbar_control()
     if(glb::con.get_digital(pros::E_CONTROLLER_DIGITAL_R1)) 
     {
         glb::left_PTO.set(true);
-        lb::right_PTO.set(true);
-        chas::spin_front(127);
+        glb::right_PTO.set(true);
+        mtr::spin(127, front);
     }
     else if(glb::con.get_digital(pros::E_CONTROLLER_DIGITAL_R2)) 
     {
         glb::left_PTO.set(true);
         glb::right_PTO.set(true);
-        chas::spin_front(-127);
+        mtr::spin(-127, front);
     }
-    else chas::stop_front();
+    else mtr::stop(front);
 }
 
 #endif

@@ -23,6 +23,7 @@ namespace obj
             extended = extend_val;
             pneu.set_value(extend_val);
         }
+        
         void toggle()
         {
             if(extended)
@@ -49,17 +50,14 @@ namespace obj
 namespace glb
 {
     // motors
-    #define P_LEFT_FRONT 1
+    #define P_LEFT_FRONT 1 // PTO left
     #define P_LEFT_MID_FRONT 13
     #define P_LEFT_MID_BACK 19
     #define P_LEFT_BACK 15
-    #define P_RIGHT_FRONT 15
-    #define P_RIGHT_MID_FRONT 6
-    #define P_RIGHT_MID_BACK 9
-    #define P_RIGHT_BACK 11
-
-    #define P_CHAIN_BAR 1111
-    #define P_RINGS 2222
+    #define P_RIGHT_FRONT 6  // PTO right
+    #define P_RIGHT_MID_FRONT 9
+    #define P_RIGHT_MID_BACK 11
+    #define P_RIGHT_BACK 12
     // pistons
     #define P_LPTO 'A'
     #define P_RPTO 'B'
@@ -71,12 +69,12 @@ namespace glb
     // chassis
     pros::Motor left_front(P_LEFT_FRONT, pros::E_MOTOR_GEARSET_06, false);
     pros::Motor left_mid_front(P_LEFT_MID_FRONT, pros::E_MOTOR_GEARSET_06, false);
-    pros::Motor left_mid_back(P_LEFT_MID_FRONT, pros::E_MOTOR_GEARSET_06, false);
+    pros::Motor left_mid_back(P_LEFT_MID_BACK, pros::E_MOTOR_GEARSET_06, true);
     pros::Motor left_back(P_LEFT_BACK, pros::E_MOTOR_GEARSET_06, false);
-    pros::Motor right_front(P_RIGHT_FRONT, pros::E_MOTOR_GEARSET_06, false);
-    pros::Motor right_mid_front(P_RIGHT_MID_FRONT, pros::E_MOTOR_GEARSET_06, false);
-    pros::Motor right_mid_back(P_RIGHT_MID_FRONT, pros::E_MOTOR_GEARSET_06, false);
-    pros::Motor right_back(P_RIGHT_BACK, pros::E_MOTOR_GEARSET_06, false);
+    pros::Motor right_front(P_RIGHT_FRONT, pros::E_MOTOR_GEARSET_06, true);
+    pros::Motor right_mid_front(P_RIGHT_MID_FRONT, pros::E_MOTOR_GEARSET_06, true);
+    pros::Motor right_mid_back(P_RIGHT_MID_BACK, pros::E_MOTOR_GEARSET_06, false);
+    pros::Motor right_back(P_RIGHT_BACK, pros::E_MOTOR_GEARSET_06, true);
     // misc
     pros::Imu imu(P_IMU);
     pros::Controller con(pros::E_CONTROLLER_MASTER);
@@ -91,29 +89,42 @@ namespace glb
 #define HOLD 1
 namespace chas
 {
-    void spin_left(double speed) // value range from -127 to 127
+    void spin_left(double speed, bool eight_motor=false) // value range from -127 to 127
     {
-        glb::left_front.move(speed);
+        if(eight_motor) glb::left_front.move(speed);
         glb::left_mid_front.move(speed);
         glb::left_mid_back.move(speed);
         glb::left_back.move(speed);
     }
 
-    void spin_right(double speed)
+    void spin_right(double speed, bool eight_motor)
     {
-        glb::right_front.move(speed);
+        if(eight_motor) glb::right_front.move(speed);
         glb::right_mid_front.move(speed);
         glb::right_mid_back.move(speed);
         glb::right_back.move(speed);
     }
 
-    void stop()
+    void stop(bool eight_motor=true)
     {
-        spin_left(0);
-        spin_right(0);
+        spin_left(0, eight_motor);
+        spin_right(0, eight_motor);
     }
 
-    void set_brake(short int brake_num)
+    void stop_front()
+    {
+        glb::right_front.move(0);
+        glb::left_front.move(0);
+    }
+
+    void spin_front(double speed)
+    {
+        glb::right_front.move(speed);
+        glb::left_front.move(speed);
+    }
+
+
+    void set_brake(short int brake_num) // COAST, HOLD
     {
         auto brake_type = pros::E_MOTOR_BRAKE_COAST;
         if(brake_num == COAST) brake_type = pros::E_MOTOR_BRAKE_COAST;

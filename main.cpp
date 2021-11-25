@@ -28,18 +28,18 @@ void opcontrol()
         disabled = disable_all();
         if(!disabled)
         {
-            arcade_drive();
-            PTO_control();
+            arcade_drive(PTO_control());
+            chainbar_control(PTO_control());
         }
         else
         {
-            con.clear();
-            if(timer % 50 == 0) con.print(1, 0, "DISABLED");
+            glb::con.clear();
+            if(timer % 100 == 0) glb::con.set_text(1, 0, "DISABLED");
             
             chas::stop();
         }
 
-        delay(1);
+        pros::delay(1);
         timer += 1;
     }
 }

@@ -1,7 +1,9 @@
 #include "main.h"
 #include "driver.hpp"
+#include "global.hpp"
 using namespace pros;
-using namespace glb;
+using namespace glb; // global variables
+using namespace mtr; // motor functions
 
 
 

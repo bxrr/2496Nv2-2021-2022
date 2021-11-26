@@ -85,11 +85,11 @@ namespace glb
 
 
 // additional function groups ==================================================================
-enum BrakeType {coast, hold};
-enum Mode {all, chas, front};
-
 namespace mtr
 {
+    enum BrakeType {coast, hold};
+    enum Mode {all, chas, front};
+
     void spin_left(double speed, Mode mode=all) // value range from -127 to 127
     {
         if(mode != chas) glb::left_front.move(speed);
@@ -180,7 +180,7 @@ namespace mtr
         double chas_avg = (glb::left_mid_front.get_temperature() + glb::left_mid_back.get_temperature() + glb::left_back.get_temperature() + glb::right_mid_front.get_temperature() + glb::right_mid_back.get_temperature() + glb::right_back.get_temperature()) / 6;
         if(mode == front) return front_avg;
         else if(mode == chas) return chas_avg;
-        else return front_avg + chas_avg;
+        else return (front_avg + chas_avg) / 2;
     }
 }
 

@@ -1,5 +1,6 @@
 #include "main.h"
-#include "globals.hpp"
+#include "global.hpp"
+
 
 red_deelev()
 {

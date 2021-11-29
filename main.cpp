@@ -33,6 +33,8 @@ void opcontrol()
             // control functions in here
             arcade_drive(PTO_control());
             chainbar_control();
+
+            if(timer % 55 == 0) print_temp(chas);
         }
         else
         {

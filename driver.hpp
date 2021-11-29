@@ -92,4 +92,9 @@ void chainbar_control()
     else mtr::stop(front);
 }
 
+void print_temp(Mode mode=chas, int line=1)
+{
+    glb::con.print(0, line, "%.2f", mtr::get_temp(mode));
+}
+
 #endif

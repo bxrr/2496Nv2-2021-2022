@@ -43,6 +43,96 @@ namespace obj
             return extended;
         }
     };
+
+
+    class PID
+    {
+    private:
+        double integral;
+        double last_error;
+        float slew;
+        float kP, kI, kD;
+        float init_kP, init_kI, init_kD;
+    public:
+
+        PID(float kP, float kI=0, float kD=0, float slew=1) : integral(0), last_error(0)
+        {
+            this->kP = kP;
+            this->kI = kI;
+            this->kD = kD;
+
+            this->slew = slew;
+
+            init_kP = kP;
+            init_kI = kI;
+            init_kD = kD;
+        }
+
+        double calculate(double target, double current, bool count_integral=false)
+        {
+            static double error = 0;
+            last_error = error;
+            error = target - current;
+            if(count_integral) integral += error;
+            return slew * ((error * kP) + (integral * kI) + ((error - last_error) * kD)); 
+        }
+
+        void increment_slew()
+        {
+            static float slew_increment = slew;
+            if(slew >= 1) slew = 1;
+            else slew += slew_increment;
+        }
+
+        void reset_integral()
+        {
+            integral = 0;
+        }
+
+        void set_kP(float new_kP)
+        {
+            kP = new_kP;
+        }
+        
+        void set_kI(float new_kI)
+        {
+            kI = new_kI;
+        }
+        
+        void set_kD(float new_kD)
+        {
+            kD = new_kD;
+        }
+
+        float get_kP()
+        {
+            return kP;
+        }
+        
+        float get_kI()
+        {
+            return kI;
+        }
+        
+        float get_kD()
+        {
+            return kD;
+        }
+
+        void modify(float new_kP=-999, float new_kI=-999, float new_kD=-999)
+        {
+            if(new_kP != -999) kP = new_kP;
+            if(new_kI != -999) kI = new_kI;
+            if(new_kD != -999) kD = new_kD;
+        }
+
+        void reset()
+        {
+            kP = init_kP;
+            kI = init_kI;
+            kD = init_kD;
+        }
+    };
 }
 
 
@@ -181,6 +271,69 @@ namespace mtr
         if(mode == front) return front_avg;
         else if(mode == chas) return chas_avg;
         else return (front_avg + chas_avg) / 2;
+    }
+
+    void spin_dist(double distance, double speed=127)
+    {
+        double target = left_pos() + distance;
+        while(left_pos() < target)
+        {
+            spin(speed);
+        }
+    }
+}
+
+namespace pid
+{
+    obj::PID drive_pid(2.0, 0.08, 0);
+    obj::PID auto_straight(2.0);
+
+    void drive(double distance, int timeout=6000, double multiplier=1.0)
+    {
+        glb::imu.set_heading(180);
+        double target = (mtr::left_pos() + mtr::right_pos()) / 2 + distance;
+        double start_heading = glb::imu.get_heading();
+        int timer = 0;
+
+        bool within_range = false;
+        double within_range_val = 5;
+        int within_range_time;
+
+        while(true)
+        {
+            double cur_pos = (mtr::left_pos() + mtr::right_pos()) / 2;
+            bool start_integral = target - cur_pos < 20;
+            double base_speed = multiplier * drive_pid.calculate(target, cur_pos, start_integral);
+            double correction_speed = auto_straight.calculate(start_heading, glb::imu.get_heading());
+            
+            mtr::spin_left(base_speed + correction_speed, mtr::chas);
+            mtr::spin_right(base_speed - correction_speed, mtr::chas);
+
+            if(timer >= timeout) break;
+            if(target - cur_pos <= within_range_val)
+            {
+                if(!within_range)
+                {
+                    within_range_time = timer + 200;
+                    within_range = true;
+                }
+                else if(timer >= within_range_time)
+                {
+                    break;
+                }
+            }
+            else within_range = false;
+
+            timer += 5;
+            pros::delay(5);
+        }
+
+        mtr::stop(chas);
+    }
+
+    void rotate()
+    {
+        
     }
 }
 

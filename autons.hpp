@@ -1,43 +1,31 @@
 #include "main.h"
 #include "global.hpp"
+using namespace glb;
+using namespace mtr;
 
 
-red_deelev()
+
+rush()
 {
 	
 }
 
-red_elev()
+de_elev_long()
 {
 	
 }
 
-red_both()
+elev_long()
 {
 	
 }
 
-blue_deelev()
-{
-	
-}
-
-blue_elev()
-{
-	
-}
-
-blue_both()
+win_point()
 {
 	
 }
 
 skills()
-{
-	
-}
-
-rush()
 {
 	
 }

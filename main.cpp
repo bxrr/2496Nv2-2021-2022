@@ -1,12 +1,18 @@
 #include "main.h"
 #include "driver.hpp"
 #include "global.hpp"
+#include "autons.hpp"
 using namespace pros;
 using namespace glb; // global variables
-using namespace mtr; // motor functions
+
+// int a, *b, c[5], d(void); // this compiles btw 
+// this abomination is a function that returns a function pointer: void (*func())();
 
 
+// global variables
+void (*auton)() = aut::auton_list.at(0);
 
+// functions
 void initialize() 
 {
     con.clear();
@@ -18,10 +24,14 @@ void disabled() {}
 
 void competition_initialize() {}
 
-void autonomous() {}
+void autonomous() 
+{
+    (*auton)();
+}
 
 void opcontrol() 
 {
+    auton = auton_selector();
     long long timer = 0;
     bool disabled = false;
 
@@ -45,6 +55,6 @@ void opcontrol()
         }
 
         pros::delay(1);
-        timer += 1;
+        timer++;
     }
 }

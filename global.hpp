@@ -1,6 +1,3 @@
-// What goes into the global file: Any global variables or groupings which allow for more convenient use.
-// Calculations, like PIDs and such should not go in here.
-
 #ifndef __GLOBALS_H__
 #define __GLOBALS_H__
 
@@ -54,7 +51,6 @@ namespace obj
         float kP, kI, kD;
         float init_kP, init_kI, init_kD;
     public:
-
         PID(float kP, float kI=0, float kD=0, float slew=1) : integral(0), last_error(0)
         {
             this->kP = kP;
@@ -66,27 +62,6 @@ namespace obj
             init_kP = kP;
             init_kI = kI;
             init_kD = kD;
-        }
-
-        double calculate(double target, double current, bool count_integral=false)
-        {
-            static double error = 0;
-            last_error = error;
-            error = target - current;
-            if(count_integral) integral += error;
-            return slew * ((error * kP) + (integral * kI) + ((error - last_error) * kD)); 
-        }
-
-        void increment_slew()
-        {
-            static float slew_increment = slew;
-            if(slew >= 1) slew = 1;
-            else slew += slew_increment;
-        }
-
-        void reset_integral()
-        {
-            integral = 0;
         }
 
         void set_kP(float new_kP)
@@ -117,6 +92,27 @@ namespace obj
         float get_kD()
         {
             return kD;
+        }
+
+        double calculate(double target, double current, bool count_integral=false)
+        {
+            static double error = 0;
+            last_error = error;
+            error = target - current;
+            if(count_integral) integral += error;
+            return slew * ((error * kP) + (integral * kI) + ((error - last_error) * kD)); 
+        }
+
+        void increment_slew()
+        {
+            static float slew_increment = slew;
+            if(slew >= 1) slew = 1;
+            else slew += slew_increment;
+        }
+
+        void reset_integral()
+        {
+            integral = 0;
         }
 
         void modify(float new_kP=-999, float new_kI=-999, float new_kD=-999)
@@ -328,7 +324,7 @@ namespace pid
             pros::delay(5);
         }
 
-        mtr::stop(chas);
+        mtr::stop(mtr::chas);
     }
 
     void rotate()

@@ -3,16 +3,18 @@
 
 #include "main.h"
 #include "global.hpp"
+#include "autons.hpp"
 using namespace glb;
 using namespace mtr;
+using namespace aut;
 
-
+typedef void(*fptr)(); // function pointer declaration
 
 bool disable_all()
 {
     static bool disabled = false;
     static bool first_press = true;
-    if(con.get_digital(pros::E_CONTROLLER_DIGITAL_UP))
+    if(glb::con.get_digital(pros::E_CONTROLLER_DIGITAL_UP))
     {
         if(first_press)
         {
@@ -24,16 +26,65 @@ bool disable_all()
     return disabled;
 }
 
+fptr auton_selector()
+{
+    short int selected = 0;
+    long long timer = 0;
+
+    bool left_first = true;
+    bool right_first = true;
+
+    while(true)
+    {
+        if(!glb::con.get_digital(pros::E_CONTROLLER_DIGITAL_A))
+        {
+            if(timer % 55 == 0) glb::con.print(0, 1, "Select: %s", aut::auton_names.at(selected));
+
+            if(glb::con.get_digital(pros::E_CONTROLLER_DIGITAL_LEFT))
+            {
+                if(left_first)
+                {
+                    left_first = false;
+                    if(selected > 0) selected--;
+                }
+            }
+            else left_first = true;
+
+            if(glb::con.get_digital(pros::E_CONTROLLER_DIGITAL_RIGHT))
+            {
+                if(right_first)
+                {
+                    right_first = false;
+                    if(selected < aut::auton_names.size()-1) selected++;
+                }
+            }
+            else right_first = true;
+
+        }
+        else
+        {
+            glb::con.clear();
+            pros::delay(50);
+            glb::con.print(0, 1, "Selected");
+            pros::delay(200);
+            return aut::auton_list.at(selected);
+        }
+
+        pros::delay(1);
+        timer++;
+    }
+}
+
 void arcade_drive(bool all_motors)
 {
     Mode mode = all;
     if(all_motors) mode = all;
     else mode = chas;
     
-    if(abs(con.get_analog(pros::E_CONTROLLER_ANALOG_LEFT_Y)) > 10 || abs(con.get_analog(pros::E_CONTROLLER_ANALOG_RIGHT_X)) > 10)
+    if(abs(glb::con.get_analog(pros::E_CONTROLLER_ANALOG_LEFT_Y)) > 10 || abs(glb::con.get_analog(pros::E_CONTROLLER_ANALOG_RIGHT_X)) > 10)
     {
-        mtr::spin_left(con.get_analog(pros::E_CONTROLLER_ANALOG_LEFT_Y) + con.get_analog(pros::E_CONTROLLER_ANALOG_RIGHT_X), mode);
-        mtr::spin_right(con.get_analog(pros::E_CONTROLLER_ANALOG_LEFT_Y) - con.get_analog(pros::E_CONTROLLER_ANALOG_RIGHT_X), mode);
+        mtr::spin_left(con.get_analog(pros::E_CONTROLLER_ANALOG_LEFT_Y) + glb::con.get_analog(pros::E_CONTROLLER_ANALOG_RIGHT_X), mode);
+        mtr::spin_right(con.get_analog(pros::E_CONTROLLER_ANALOG_LEFT_Y) - glb::con.get_analog(pros::E_CONTROLLER_ANALOG_RIGHT_X), mode);
     }
     else
     {
@@ -47,10 +98,10 @@ void tank_drive(bool all_motors)
     if(all_motors) mode = all;
     else mode = chas;
     
-    if(abs(con.get_analog(pros::E_CONTROLLER_ANALOG_LEFT_Y)) > 10 || abs(con.get_analog(pros::E_CONTROLLER_ANALOG_RIGHT_Y)) > 10)
+    if(abs(glb::con.get_analog(pros::E_CONTROLLER_ANALOG_LEFT_Y)) > 10 || abs(glb::con.get_analog(pros::E_CONTROLLER_ANALOG_RIGHT_Y)) > 10)
     {
-        mtr::spin_left(con.get_analog(pros::E_CONTROLLER_ANALOG_LEFT_Y), mode);
-        mtr::spin_right(con.get_analog(pros::E_CONTROLLER_ANALOG_RIGHT_Y), mode);
+        mtr::spin_left(glb::con.get_analog(pros::E_CONTROLLER_ANALOG_LEFT_Y), mode);
+        mtr::spin_right(glb::con.get_analog(pros::E_CONTROLLER_ANALOG_RIGHT_Y), mode);
     }
     else
     {

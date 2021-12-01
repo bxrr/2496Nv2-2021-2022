@@ -17,30 +17,33 @@ void initialize()
 {
     con.clear();
     pros::lcd::set_text(0, "2496NextLevelNinjas");
-    mtr::set_brake(coast);
+    mtr::set_brake(coast, all);
 }
 
 void disabled() {}
 
 void competition_initialize() {}
 
-void autonomous() 
-{
-    (*auton)();
-}
+void autonomous() { (*auton)(); }
 
 void opcontrol() 
 {
     auton = auton_selector();
+
+    mtr::set_brake(hold, front);
+    mtr::reset_pos();
+
     long long timer = 0;
     bool disabled = false;
+    bool run_once = true;
 
     while(true)
     {
         disabled = disable_all();
         if(!disabled)
         {
-            // control functions in here
+            run_once = true;
+            // driver.hpp control functions
             arcade_drive(PTO_control());
             chainbar_control();
 
@@ -48,7 +51,11 @@ void opcontrol()
         }
         else
         {
-            glb::con.clear();
+            if(run_once)
+            {
+                glb::con.clear();
+                run_once = false;
+            }
             if(timer % 100 == 0) glb::con.set_text(1, 0, "DISABLED");
             
             mtr::stop();

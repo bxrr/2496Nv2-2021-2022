@@ -17,8 +17,11 @@ namespace obj
         // methods
         void set(bool extend_val)
         {
-            extended = extend_val;
-            pneu.set_value(extend_val);
+            if(extended != extend_val)
+            {
+                extended = extend_val;
+                pneu.set_value(extend_val);
+            }
         }
 
         void toggle()
@@ -108,6 +111,7 @@ namespace obj
             static float slew_increment = slew;
             if(slew >= 1) slew = 1;
             else slew += slew_increment;
+            if(slew >= 1) slew = 1;
         }
 
         void reset_integral()
@@ -260,6 +264,29 @@ namespace mtr
         else return (glb::right_front.get_position() + glb::right_mid_front.get_position() + glb::right_mid_back.get_position() + glb::right_back.get_position()) / 4;
     }
 
+    double pos(Mode mode=chas)
+    {
+        return (left_pos(mode) + right_pos(mode)) / 2;
+    }
+
+    void reset_pos(Mode mode=all)
+    {
+        if(mode != chas) 
+        {
+            glb::right_front.tare_position();
+            glb::left_front.tare_position();
+        }
+        if(mode != front)
+        {
+            glb::left_mid_front.tare_position();
+            glb::left_mid_back.tare_position();
+            glb::left_back.tare_position();
+            glb::right_mid_front.tare_position();
+            glb::right_mid_back.tare_position();
+            glb::right_back.tare_position();
+        }
+    }
+
     double get_temp(Mode mode=chas)
     {
         double front_avg = (glb::left_front.get_temperature() + glb::right_front.get_temperature()) / 2;
@@ -281,7 +308,7 @@ namespace mtr
 
 namespace pid
 {
-    obj::PID drive_pid(2.0, 0.08, 0);
+    obj::PID drive_pid(2.0, 0, 0);
     obj::PID auto_straight(2.0);
 
     void drive(double distance, int timeout=6000, double multiplier=1.0)
@@ -297,7 +324,7 @@ namespace pid
 
         while(true)
         {
-            double cur_pos = (mtr::left_pos() + mtr::right_pos()) / 2;
+            double cur_pos = mtr::pos();
             bool start_integral = target - cur_pos < 20;
             double base_speed = multiplier * drive_pid.calculate(target, cur_pos, start_integral);
             double correction_speed = auto_straight.calculate(start_heading, glb::imu.get_heading());
@@ -313,17 +340,13 @@ namespace pid
                     within_range_time = timer + 200;
                     within_range = true;
                 }
-                else if(timer >= within_range_time)
-                {
-                    break;
-                }
+                else if(timer >= within_range_time) break;
             }
             else within_range = false;
 
             timer += 5;
             pros::delay(5);
         }
-
         mtr::stop(mtr::chas);
     }
 

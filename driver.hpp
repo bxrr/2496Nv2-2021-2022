@@ -8,6 +8,7 @@ using namespace glb;
 using namespace mtr;
 using namespace aut;
 
+
 typedef void(*fptr)(); // function pointer declaration
 
 bool disable_all()

@@ -97,21 +97,28 @@ namespace obj
             return kD;
         }
 
-        double calculate(double target, double current, bool count_integral=false)
+        void increment_slew()
+        {
+            static float slew_increment = slew;
+            static bool first_run = true;
+            if(first_run)
+            {
+                first_run = false;
+                return;
+            }
+            if(slew > 1) slew = 1;
+            else slew += slew_increment;
+            if(slew > 1) slew = 1;
+        }
+
+        double calculate(double target, double current, bool count_integral=false, bool add_slew=true)
         {
             static double error = 0;
+            if(add_slew) increment_slew();
             last_error = error;
             error = target - current;
             if(count_integral) integral += error;
             return slew * ((error * kP) + (integral * kI) + ((error - last_error) * kD)); 
-        }
-
-        void increment_slew()
-        {
-            static float slew_increment = slew;
-            if(slew >= 1) slew = 1;
-            else slew += slew_increment;
-            if(slew >= 1) slew = 1;
         }
 
         void reset_integral()
@@ -308,7 +315,7 @@ namespace mtr
 
 namespace pid
 {
-    obj::PID drive_pid(2.0, 0, 0);
+    obj::PID drive_pid(2.0, 0, 0, 0.05);
     obj::PID auto_straight(2.0);
 
     void drive(double distance, int timeout=6000, double multiplier=1.0)

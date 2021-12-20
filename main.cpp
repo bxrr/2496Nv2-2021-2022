@@ -29,9 +29,11 @@ void autonomous() { (*auton)(); }
 void opcontrol() 
 {
     auton = auton_selector();
+    delay(500);
 
     mtr::set_brake(hold, front);
     mtr::reset_pos();
+    init_pistons();
 
     long long timer = 0;
     bool disabled = false;
@@ -39,6 +41,7 @@ void opcontrol()
 
     while(true)
     {
+        if(timer % 50 == 0) { glb::con.print(0, 1, "Deg: %f", glb::imu.get_heading()); }
         disabled = disable_all();
         if(!disabled)
         {

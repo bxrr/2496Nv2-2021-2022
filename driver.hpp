@@ -27,6 +27,14 @@ bool disable_all()
     return disabled;
 }
 
+void init_pistons()
+{
+    glb::left_PTO.initialize();
+    glb::right_PTO.initialize();
+    glb::back_hook.initialize();
+    glb::front_lift.initialize();
+}
+
 fptr auton_selector()
 {
     short int selected = 0;
@@ -73,6 +81,15 @@ fptr auton_selector()
 
         pros::delay(1);
         timer++;
+    }
+}
+
+void s_hold(Mode mode=chas)
+{
+    if(abs(imu.get_pitch()) > 4.0)
+    {
+        double speed = s_hold_pid.calculate(0, glb::imu.get_pitch());
+        mtr::spin(speed, mode);
     }
 }
 

@@ -9,10 +9,28 @@ namespace obj
 {
     class Piston
     {
-    private: pros::ADIDigitalOut pneu; bool extended;
+    private: 
+        pros::ADIDigitalOut pneu; 
+        int port;
+        bool start_status
+        bool extended;
     public:
-    // initialization constructor
-        Piston(int port, bool extend=false) : pneu(port), extended(extend) {set(extend);}
+        void initialize();
+        void set();
+
+        // initialization constructor
+        Piston(int port_num, bool start_extended=false, bool initialize=false) : extended(false)
+        {
+            port = port_num;
+            start_status = start_extended;
+            if(initialize) initialize();
+        }
+
+        void initialize()
+        {
+            extend = start_stauts;
+            set(start_status);
+        }
 
         // methods
         void set(bool extend_val)
@@ -140,6 +158,51 @@ namespace obj
             kD = init_kD;
         }
     };
+
+
+    class Inertial
+    {
+    private:
+        pros::Imu imu;
+        double heading;
+        double last_heading;
+    public:
+        Inertial(int port_num) : imu(port_num), last_heading(180), heading(0); 
+        {
+            imu.set_heading(180);
+        }
+
+        void reset()
+        {
+            imu.set_heading(180);
+            heading = 0;
+            last_heading = 180;
+        }
+
+        void update()
+        {
+            heading += imu.get_heading() - last_heading;
+            last_heading = imu.get_heading();
+            imu.set_heading(180);
+        }
+
+        double get_heading()
+        {
+            update();
+            return heading;
+        }
+
+        double get_pitch()
+        {
+            return imu.get_pitch();
+        }
+
+        void set_heading(heading)
+        {
+            last_heading = heading;
+            this->heading = heading;
+        }
+    };
 }
 
 
@@ -173,20 +236,27 @@ namespace glb
     pros::Motor right_mid_back(P_RIGHT_MID_BACK, pros::E_MOTOR_GEARSET_06, false);
     pros::Motor right_back(P_RIGHT_BACK, pros::E_MOTOR_GEARSET_06, true);
     // misc
-    pros::Imu imu(P_IMU);
+    obj::Inertial imu(P_IMU);
     pros::Controller con(pros::E_CONTROLLER_MASTER);
     // piston
     obj::Piston left_PTO(P_LPTO);
     obj::Piston right_PTO(P_RPTO);
+    obj::Piston back_hook(P_BACK_HOOK);
+    obj::Piston front_lift(P_FRONT_LIFT);
 }
 
 
 // additional function groups ==================================================================
 namespace mtr
 {
+    // PID objects
+    obj::PID s_hold_pid(0.7, 0, 0, 0);
+
+    // Enumerations
     enum BrakeType {coast, hold};
     enum Mode {all, chas, front};
-
+    
+    // Function group
     void spin_left(double speed, Mode mode=all) // value range from -127 to 127
     {
         if(mode != chas) glb::left_front.move(speed);
@@ -316,26 +386,25 @@ namespace mtr
 namespace pid
 {
     obj::PID drive_pid(2.0, 0, 0, 0.05);
-    obj::PID auto_straight(2.0);
-    obj::PID rotate(2.0, 0, 0);
+    obj::PID auto_straight_pid(2.0);
+    obj::PID rotate_pid(2.0, 0, 0);
 
-    void drive(double distance, int timeout=6000, double multiplier=1.0)
+    void drive(double distance, int timeout=5000, double multiplier=1.0)
     {
-        glb::imu.set_heading(180);
         double target = mtr::pos() / 2 + distance;
         double start_heading = glb::imu.get_heading();
-        int timer = 0;
+        long long timer = 0;
 
         bool within_range = false;
         double within_range_val = 5;
         int within_range_time;
 
-        while(true)
+        while(timer <= timeout)
         {
             double cur_pos = mtr::pos();
             bool start_integral = target - cur_pos < 20;
             double base_speed = multiplier * drive_pid.calculate(target, cur_pos, start_integral);
-            double correction_speed = auto_straight.calculate(start_heading, glb::imu.get_heading());
+            double correction_speed = auto_straight_pid.calculate(start_heading, glb::imu.get_heading());
             
             mtr::spin_left(base_speed + correction_speed, mtr::chas);
             mtr::spin_right(base_speed - correction_speed, mtr::chas);
@@ -358,9 +427,52 @@ namespace pid
         mtr::stop(mtr::chas);
     }
 
-    void rotate()
+    void rotate(double degrees, int timeout=5000, double multiplier=1.0)
     {
-        
+        double start_heading = glb::imu.get_heading();
+        double target_heading = start_heading + degrees;
+        long long timer = 0;
+
+        bool count_integral = false;
+        bool integral_range = 2;
+
+        bool within_range = false;
+        double within_range_val = 0.3;
+        double within_range_time;
+
+        while(timer <= timeout)
+        {
+            double cur_heading = glb::imu.get_heading();
+            double error = target_heading - cur_heading;
+
+            if(abs(error) < integral_range)
+                count_integral = true;
+            double speed = multiplier * rotate_pid.calculate(target_heading, cur_heading, count_integral);
+            mtr::spin_left(speed);
+            mtr::spin_right(-speed);
+
+            if(abs(error) <= within_range_val)
+            {
+                if(!within_range)
+                {
+                    within_range = true;
+                    within_range_time = timer;
+                }
+                else if(within_range_time + 200 <= timer)
+                {
+                    break;
+                }
+            }
+
+            timer += 5;
+            pros::delay(5);
+        }
+        mtr::stop(mtr::chas);
+    }
+
+    void rotate_to(double degree_to, int timeout=5000, double multiplier=1.0)
+    {
+        rotate(degree_to - imu.get_heading(), timeout, multiplier);
     }
 }
 

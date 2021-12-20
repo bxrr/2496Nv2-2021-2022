@@ -317,11 +317,12 @@ namespace pid
 {
     obj::PID drive_pid(2.0, 0, 0, 0.05);
     obj::PID auto_straight(2.0);
+    obj::PID rotate(2.0, 0, 0);
 
     void drive(double distance, int timeout=6000, double multiplier=1.0)
     {
         glb::imu.set_heading(180);
-        double target = (mtr::left_pos() + mtr::right_pos()) / 2 + distance;
+        double target = mtr::pos() / 2 + distance;
         double start_heading = glb::imu.get_heading();
         int timer = 0;
 

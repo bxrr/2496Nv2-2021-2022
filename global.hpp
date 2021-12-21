@@ -186,9 +186,9 @@ namespace obj
             imu.set_heading(180);
         }
 
-        double get_heading()
+        double get_heading(bool update_heading=true)
         {
-            update();
+            if(update_heading) update();
             return heading;
         }
 

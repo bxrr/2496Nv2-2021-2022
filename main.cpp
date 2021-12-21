@@ -5,9 +5,6 @@
 using namespace pros;
 using namespace glb; // global variables
 
-// int a, *b, c[5], d(void); // this compiles btw 
-// this abomination is a function that returns a function pointer: void (*func())();
-
 
 // global variables
 void (*auton)() = aut::auton_list.at(0);
@@ -31,9 +28,9 @@ void opcontrol()
     auton = auton_selector();
     delay(500);
 
+    init_pistons();
     mtr::set_brake(hold, front);
     mtr::reset_pos();
-    init_pistons();
 
     long long timer = 0;
     bool disabled = false;

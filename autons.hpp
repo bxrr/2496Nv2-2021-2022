@@ -21,6 +21,12 @@ namespace aut
         drive(200);
     }
 
+    void neutral_tree()
+    {
+        rotate(90);
+        rotate(-90);
+    }
+
     void win_point()
     {
         drive(400);
@@ -36,8 +42,8 @@ namespace aut
         drive(1000);
     }
 
-    std::vector<void (*)()> auton_list{elev, de_elev, win_point, rush, skills};
-    std::vector<std::string> auton_names{"elev", "de_elev", "win_point", "rush", "skills"};
+    std::vector<void (*)()> auton_list{elev, de_elev, neutral_tree, win_point, rush, skills};
+    std::vector<std::string> auton_names{"elev", "de_elev", "neutral_tree", "win_point", "rush", "skills"};
 }
 
 

@@ -68,7 +68,6 @@ fptr auton_selector()
                 }
             }
             else right_first = true;
-
         }
         else
         {

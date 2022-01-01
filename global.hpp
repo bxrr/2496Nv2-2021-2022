@@ -11,25 +11,18 @@ namespace obj
     {
     private: 
         pros::ADIDigitalOut pneu; 
-        int port;
-        bool start_status
+        bool start_status;
         bool extended;
     public:
-        void initialize();
-        void set();
-
         // initialization constructor
-        Piston(int port_num, bool start_extended=false, bool initialize=false) : extended(false)
+        Piston(int port_num, bool start_extended=false, bool init=false) : pneu(port_num), extended(false), start_status(start_extended)
         {
-            port = port_num;
-            start_status = start_extended;
-            if(initialize) initialize();
+            if(init) initialize();
         }
 
         void initialize()
         {
-            pneu(port);
-            extend = start_stauts;
+            extended = start_status;
             set(start_status);
         }
 
@@ -168,7 +161,7 @@ namespace obj
         double heading;
         double last_heading;
     public:
-        Inertial(int port_num) : imu(port_num), last_heading(180), heading(0); 
+        Inertial(int port_num) : imu(port_num), last_heading(180), heading(0)
         {
             imu.set_heading(180);
         }
@@ -198,7 +191,7 @@ namespace obj
             return imu.get_pitch();
         }
 
-        void set_heading(heading)
+        void set_heading(double heading)
         {
             last_heading = heading;
             this->heading = heading;
@@ -390,28 +383,31 @@ namespace pid
     obj::PID auto_straight_pid(2.0);
     obj::PID rotate_pid(2.0, 0, 0);
 
-    void drive(double distance, int timeout=5000, double multiplier=1.0)
+    void drive(double distance, int timeout=5000, double multiplier=1.0, double error_range=5)
     {
-        double target = mtr::pos() / 2 + distance;
+        double target = mtr::pos() + distance;
         double start_heading = glb::imu.get_heading();
         long long timer = 0;
 
         bool within_range = false;
-        double within_range_val = 5;
         int within_range_time;
 
         while(timer <= timeout)
         {
+            // calculate error/speed
             double cur_pos = mtr::pos();
             bool start_integral = target - cur_pos < 20;
             double base_speed = multiplier * drive_pid.calculate(target, cur_pos, start_integral);
             double correction_speed = auto_straight_pid.calculate(start_heading, glb::imu.get_heading());
-            
+            // apply speeds
             mtr::spin_left(base_speed + correction_speed, mtr::chas);
             mtr::spin_right(base_speed - correction_speed, mtr::chas);
 
-            if(timer >= timeout) break;
-            if(target - cur_pos <= within_range_val)
+            // print error
+            if(timer % 50 == 0) { glb::con.print(1, 0, "Err: %lf", target - cur_pos); }
+
+            // check loop break condition
+            if(target - cur_pos <= error_range)
             {
                 if(!within_range)
                 {
@@ -422,13 +418,15 @@ namespace pid
             }
             else within_range = false;
 
+            // increment timer
             timer += 5;
             pros::delay(5);
         }
+        // stop chassis once out of loop
         mtr::stop(mtr::chas);
     }
 
-    void rotate(double degrees, int timeout=5000, double multiplier=1.0)
+    void rotate(double degrees, int timeout=5000, double multiplier=1.0, double error_range=0.3)
     {
         double start_heading = glb::imu.get_heading();
         double target_heading = start_heading + degrees;
@@ -438,21 +436,28 @@ namespace pid
         bool integral_range = 2;
 
         bool within_range = false;
-        double within_range_val = 0.3;
         double within_range_time;
 
         while(timer <= timeout)
         {
+            // calculate error
             double cur_heading = glb::imu.get_heading();
             double error = target_heading - cur_heading;
 
+            // calculate speed
             if(abs(error) < integral_range)
                 count_integral = true;
             double speed = multiplier * rotate_pid.calculate(target_heading, cur_heading, count_integral);
+
+            // apply speeds
             mtr::spin_left(speed);
             mtr::spin_right(-speed);
 
-            if(abs(error) <= within_range_val)
+            // print error
+            if(timer % 50 == 0) { glb::con.print(1, 0, "Err: %lf", error); }
+
+            // check loop break condition
+            if(abs(error) <= error_range)
             {
                 if(!within_range)
                 {
@@ -471,9 +476,9 @@ namespace pid
         mtr::stop(mtr::chas);
     }
 
-    void rotate_to(double degree_to, int timeout=5000, double multiplier=1.0)
+    void rotate_to(double degree_to, int timeout=5000, double multiplier=1.0, double error_range=0.3)
     {
-        rotate(degree_to - imu.get_heading(), timeout, multiplier);
+        rotate(degree_to - glb::imu.get_heading(), timeout, multiplier, error_range);
     }
 }
 

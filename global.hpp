@@ -28,6 +28,7 @@ namespace obj
 
         void initialize()
         {
+            pneu(port);
             extend = start_stauts;
             set(start_status);
         }

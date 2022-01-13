@@ -11,6 +11,20 @@ using namespace aut;
 
 typedef void(*fptr)(); // function pointer declaration
 
+void PTO_on()
+{
+    glb::con.rumble(". .")
+    glb::left_PTO.set(true);
+    glb::right_PTO.set(true);
+}
+
+void PTO_off()
+{
+    glb::con.rumble(".")
+    glb::left_PTO.set(false);
+    glb::right_PTO.set(false);
+}
+
 bool disable_all()
 {
     static bool disabled = false;
@@ -31,8 +45,11 @@ void init_pistons()
 {
     glb::left_PTO.initialize();
     glb::right_PTO.initialize();
-    glb::back_hook.initialize();
-    glb::front_lift.initialize();
+    glb::lfront_clamp.initialize();
+    glb::rfront_clamp.initialize();
+    glb::lback_lift.initialize();
+    glb::rback_lift.initialize();
+    glb::chain_clamp.initialize();
 }
 
 fptr auton_selector()
@@ -129,13 +146,19 @@ void tank_drive(bool all_motors)
 bool PTO_control()
 {
     static bool first_press = true;
-    if(glb::con.get_digital(pros::E_CONTROLLER_DIGITAL_R1))
+    if(glb::con.get_digital(pros::E_CONTROLLER_DIGITAL_L2) && glb::con.get_digital(pros::E_CONTROLLER_DIGITAL_R1))
     {
         if(first_press)
         {
             first_press = false;
-            glb::left_PTO.set(false);
-            glb::right_PTO.set(false);
+            if(glb::left_PTO.status())
+            {
+                PTO_off();
+            }
+            else
+            {
+                PTO_on();
+            }
             mtr::stop(front);
         }
     }
@@ -145,19 +168,58 @@ bool PTO_control()
 
 void chainbar_control()
 {
-    if(glb::con.get_digital(pros::E_CONTROLLER_DIGITAL_R1)) 
+    if(glb::con.get_digital(pros::E_CONTROLLER_DIGITAL_R1) && !glb::con.get_digital(pros::E_CONTROLLER_DIGITAL_L1) && !glb::con.get_digital(pros::E_CONTROLLER_DIGITAL_L2) && !glb::con.get_digital(pros::E_CONTROLLER_DIGITAL_R2)) 
     {
-        glb::left_PTO.set(true);
-        glb::right_PTO.set(true);
+        PTO_on();
         mtr::spin(127, front);
     }
-    else if(glb::con.get_digital(pros::E_CONTROLLER_DIGITAL_R2)) 
+    else if(glb::con.get_digital(pros::E_CONTROLLER_DIGITAL_R2) && !glb::con.get_digital(pros::E_CONTROLLER_DIGITAL_L1) && !glb::con.get_digital(pros::E_CONTROLLER_DIGITAL_L2) && !glb::con.get_digital(pros::E_CONTROLLER_DIGITAL_R1)) 
     {
-        glb::left_PTO.set(true);
-        glb::right_PTO.set(true);
+        PTO_on();
         mtr::spin(-127, front);
     }
     else mtr::stop(front);
+
+    static bool first_press = true;
+    if(glb::con.get_digital(pros::E_CONTROLLER_DIGITAL_L2) && glb::con.get_digital(pros::E_CONTROLLER_DIGITAL_R2))
+    {
+        if(first_press)
+        {
+            first_press = false;
+            glb::chain_clamp.toggle();
+        }
+    }
+    else first_press = true;
+
+}
+
+void two_bar_control()
+{
+    static bool first_press = true;
+    if(glb::con.get_digital(pros::E_CONTROLLER_DIGITAL_L1) && glb::con.get_digital(pros::E_CONTROLLER_DIGITAL_R1))
+    {
+        if(first_press)
+        {
+            first_press = false;
+            glb::lback_lift.toggle();
+            glb::rback_lift.toggle();
+        }
+    }
+    else first_press = true;
+}
+
+void clamp_control()
+{
+    static bool first_press = true;
+    if(glb::con.get_digital(pros::E_CONTROLLER_DIGITAL_L1) && glb::con.get_digital(pros::E_CONTROLLER_DIGITAL_R2))
+    {
+        if(first_press)
+        {
+            first_press = false;
+            
+        }
+    }
+    else first_press = true;
 }
 
 void print_temp(Mode mode=chas, int line=1)

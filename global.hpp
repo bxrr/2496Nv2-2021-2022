@@ -215,8 +215,11 @@ namespace glb
     // pistons
     #define P_LPTO 'A'
     #define P_RPTO 'B'
-    #define P_BACK_HOOK 'C'
-    #define P_FRONT_LIFT 'D'
+    #define P_LEFT_FRONT_CLAMP 'C'
+    #define P_RIGHT_FRONT_CLAMP 'D'
+    #define P_LEFT_BACK_LIFT 'E'
+    #define P_RIGHT_BACK_LIFT 'F'
+    #define P_CHAIN_CLAMP 'G'
     // misc
     #define P_IMU 7
 
@@ -235,8 +238,11 @@ namespace glb
     // piston
     obj::Piston left_PTO(P_LPTO);
     obj::Piston right_PTO(P_RPTO);
-    obj::Piston back_hook(P_BACK_HOOK);
-    obj::Piston front_lift(P_FRONT_LIFT);
+    obj::Piston lfront_clamp(P_LEFT_FRONT_CLAMP);
+    obj::Piston rfront_clamp(P_RIGHT_FRONT_CLAMP);
+    obj::Piston lback_lift(P_LEFT_BACK_LIFT);
+    obj::Piston rback_lift(P_RIGHT_BACK_LIFT);
+    obj::Piston chain_clamp(P_CHAIN_CLAMP);
 }
 
 

@@ -4,23 +4,22 @@
 #include "main.h"
 #include "global.hpp"
 #include "autons.hpp"
+
 using namespace glb;
 using namespace mtr;
-using namespace aut;
-
 
 typedef void(*fptr)(); // function pointer declaration
 
 void PTO_on()
 {
-    glb::con.rumble(". .")
+    glb::con.rumble(". .");
     glb::left_PTO.set(true);
     glb::right_PTO.set(true);
 }
 
 void PTO_off()
 {
-    glb::con.rumble(".")
+    glb::con.rumble(".");
     glb::left_PTO.set(false);
     glb::right_PTO.set(false);
 }
@@ -91,7 +90,7 @@ fptr auton_selector()
             glb::con.clear();
             pros::delay(50);
             glb::con.print(0, 1, "Selected");
-            pros::delay(200);
+            pros::delay(400);
             return aut::auton_list.at(selected);
         }
 
@@ -143,6 +142,7 @@ void tank_drive(bool all_motors)
     }
 }
 
+// controls
 bool PTO_control()
 {
     static bool first_press = true;
@@ -193,7 +193,7 @@ void chainbar_control()
 
 }
 
-void two_bar_control()
+void twobar_control()
 {
     static bool first_press = true;
     if(glb::con.get_digital(pros::E_CONTROLLER_DIGITAL_L1) && glb::con.get_digital(pros::E_CONTROLLER_DIGITAL_R1))

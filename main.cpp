@@ -26,7 +26,6 @@ void autonomous() { (*auton)(); }
 void opcontrol() 
 {
     auton = auton_selector();
-    delay(500);
 
     init_pistons();
     mtr::set_brake(hold, front);
@@ -46,6 +45,9 @@ void opcontrol()
             // driver.hpp control functions
             arcade_drive(PTO_control());
             chainbar_control();
+            twobar_control();
+            clamp_control();
+
 
             if(timer % 55 == 0) print_temp(chas);
         }

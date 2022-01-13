@@ -15,18 +15,18 @@ void initialize()
     con.clear();
     pros::lcd::set_text(0, "2496NextLevelNinjas");
     mtr::set_brake(coast, all);
+
+    auton = auton_selector();
 }
 
 void disabled() {}
 
-void competition_initialize() {}
+void competition_initialize() {auton = auton_selector();}
 
 void autonomous() { (*auton)(); }
 
 void opcontrol() 
 {
-    auton = auton_selector();
-
     init_pistons();
     mtr::set_brake(hold, front);
     mtr::reset_pos();

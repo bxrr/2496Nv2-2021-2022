@@ -63,7 +63,7 @@ fptr auton_selector()
     {
         if(!glb::con.get_digital(pros::E_CONTROLLER_DIGITAL_A))
         {
-            if(timer % 55 == 0) glb::con.print(0, 1, "Select: %s", aut::auton_names.at(selected));
+            if(timer % 55 == 0) glb::con.print(0, 1, "Select: %s         ", aut::auton_names.at(selected));
 
             if(glb::con.get_digital(pros::E_CONTROLLER_DIGITAL_LEFT))
             {
@@ -90,7 +90,7 @@ fptr auton_selector()
             glb::con.clear();
             pros::delay(50);
             glb::con.print(0, 1, "Selected");
-            pros::delay(400);
+            pros::delay(1500);
             return aut::auton_list.at(selected);
         }
 

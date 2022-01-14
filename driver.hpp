@@ -12,14 +12,14 @@ typedef void(*fptr)(); // function pointer declaration
 
 void PTO_on()
 {
-    glb::con.rumble(". .");
+    glb::con.rumble(".");
     glb::left_PTO.set(true);
     glb::right_PTO.set(true);
 }
 
 void PTO_off()
 {
-    glb::con.rumble(".");
+    glb::con.rumble(". .");
     glb::left_PTO.set(false);
     glb::right_PTO.set(false);
 }

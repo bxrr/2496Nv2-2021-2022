@@ -27,6 +27,7 @@ void autonomous() { (*auton)(); }
 
 void opcontrol() 
 {
+    glb::con.clear();
     init_pistons();
     mtr::set_brake(hold, front);
     mtr::reset_pos();

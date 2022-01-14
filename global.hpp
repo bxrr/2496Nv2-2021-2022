@@ -238,8 +238,8 @@ namespace glb
     // piston
     obj::Piston left_PTO(P_LPTO);
     obj::Piston right_PTO(P_RPTO);
-    obj::Piston lfront_clamp(P_LEFT_FRONT_CLAMP);
-    obj::Piston rfront_clamp(P_RIGHT_FRONT_CLAMP);
+    obj::Piston lfront_clamp(P_LEFT_FRONT_CLAMP, true);
+    obj::Piston rfront_clamp(P_RIGHT_FRONT_CLAMP, true);
     obj::Piston lback_lift(P_LEFT_BACK_LIFT);
     obj::Piston rback_lift(P_RIGHT_BACK_LIFT);
     obj::Piston chain_clamp(P_CHAIN_CLAMP);

@@ -38,11 +38,10 @@ void opcontrol()
 
     while(true)
     {
-        if(timer % 50 == 0) { glb::con.print(0, 1, "Deg: %f", glb::imu.get_heading()); }
         disabled = disable_all();
+
         if(!disabled)
         {
-            run_once = true;
             // driver.hpp control functions
             arcade_drive(PTO_control());
             chainbar_control();
@@ -50,17 +49,11 @@ void opcontrol()
             clamp_control();
 
 
-            if(timer % 55 == 0) print_temp(chas);
+            if(timer % 50 == 0) print_temp(chas, 2);
         }
         else
         {
-            if(run_once)
-            {
-                glb::con.clear();
-                run_once = false;
-            }
-            if(timer % 100 == 0) glb::con.set_text(1, 0, "DISABLED");
-            
+            if(timer % 50 == 0) glb::con.set_text(1, 0, "DISABLED       ");
             mtr::stop();
         }
 

@@ -10,16 +10,16 @@ using namespace mtr;
 
 typedef void(*fptr)(); // function pointer declaration
 
-void PTO_on()
+void PTO_on() // access lift
 {
-    glb::con.rumble(".");
+    glb::con.controller_rumble(".");
     glb::left_PTO.set(true);
     glb::right_PTO.set(true);
 }
 
-void PTO_off()
+void PTO_off() // 8 motor drive
 {
-    glb::con.rumble(". .");
+    glb::con.controller_rumble(". .");
     glb::left_PTO.set(false);
     glb::right_PTO.set(false);
 }
@@ -63,7 +63,7 @@ fptr auton_selector()
     {
         if(!glb::con.get_digital(pros::E_CONTROLLER_DIGITAL_A))
         {
-            if(timer % 55 == 0) glb::con.print(0, 1, "Select: %s         ", aut::auton_names.at(selected));
+            if(timer % 10 == 0) glb::con.print(0, 1, "Select: %s         ", aut::auton_names.at(selected));
 
             if(glb::con.get_digital(pros::E_CONTROLLER_DIGITAL_LEFT))
             {
@@ -222,9 +222,9 @@ void clamp_control()
     else first_press = true;
 }
 
-void print_temp(Mode mode=chas, int line=1)
+void print_temp(Mode mode=chas, int line=1) // lines: 1-3
 {
-    glb::con.print(0, line, "%.2f", mtr::get_temp(mode));
+    glb::con.print(0, line, "%.1lf        ", mtr::get_temp(mode));
 }
 
 #endif

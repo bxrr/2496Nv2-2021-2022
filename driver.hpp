@@ -12,14 +12,14 @@ typedef void(*fptr)(); // function pointer declaration
 
 void PTO_on() // access lift
 {
-    glb::con.controller_rumble(".");
+    glb::con.set_text(3, 0, ".");
     glb::left_PTO.set(true);
     glb::right_PTO.set(true);
 }
 
 void PTO_off() // 8 motor drive
 {
-    glb::con.controller_rumble(". .");
+    glb::con.set_text(3, 0, "..");
     glb::left_PTO.set(false);
     glb::right_PTO.set(false);
 }
@@ -222,7 +222,7 @@ void clamp_control()
     else first_press = true;
 }
 
-void print_temp(Mode mode=chas, int line=1) // lines: 1-3
+void print_temp(Mode mode=chas, int line=1) // lines: 0-2
 {
     glb::con.print(0, line, "%.1lf        ", mtr::get_temp(mode));
 }

@@ -32,12 +32,14 @@ void opcontrol()
     mtr::set_brake(hold, front);
     mtr::reset_pos();
 
-    long long timer = 0;
     bool disabled = false;
     bool run_once = true;
+    int start_time = pros::millis();
+    int time;
 
     while(true)
     {
+        time = pros::millis() - start_time;
         disabled = disable_all();
 
         if(!disabled)
@@ -49,15 +51,12 @@ void opcontrol()
             clamp_control();
 
 
-            if(timer % 50 == 0) print_temp(chas, 2);
+            if(time % 1000 == 0) print_temp(chas, 2);
         }
         else
         {
-            if(timer % 50 == 0) glb::con.set_text(1, 0, "DISABLED       ");
+            if(time % 50 == 0) glb::con.set_text(0, 0, "DISABLED      ");
             mtr::stop();
-        }
-
-        pros::delay(1);
-        timer++;
+        }   
     }
 }

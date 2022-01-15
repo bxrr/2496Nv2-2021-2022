@@ -2,11 +2,12 @@
 #define __AUTONS_H__
 
 #include "main.h"
+#include "pid.hpp"
 #include "global.hpp"
-#include <iostream>
 #include <vector>
 #include <string>
 using namespace pid;
+using namespace glb;
 
 
 namespace aut

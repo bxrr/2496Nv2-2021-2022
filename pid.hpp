@@ -9,7 +9,7 @@ namespace pid
 {
     double global_heading = 0;
 
-    obj::PID drive_pid(2.0, 0, 0, 0.05);
+    obj::PID drive_pid(1.5, 0, 0, 0.05);
     obj::PID auto_straight_pid(2.0);
     obj::PID rotate_pid(2.0, 0, 0);
 

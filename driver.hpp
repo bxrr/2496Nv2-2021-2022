@@ -87,9 +87,8 @@ fptr auton_selector()
         }
         else
         {
-            glb::con.clear();
             pros::delay(50);
-            glb::con.print(0, 1, "Selected");
+            glb::con.print(0, 1, "Selected        ");
             pros::delay(1500);
             return aut::auton_list.at(selected);
         }
@@ -224,7 +223,7 @@ void clamp_control()
 
 void print_temp(Mode mode=chas, int line=1) // lines: 0-2
 {
-    glb::con.print(0, line, "%.1lf        ", mtr::get_temp(mode));
+    glb::con.print(0, line, "Temp: %.1lf        ", mtr::get_temp(mode));
 }
 
 #endif

@@ -152,51 +152,6 @@ namespace obj
             kD = init_kD;
         }
     };
-
-
-    class Inertial
-    {
-    private:
-        pros::Imu imu;
-        double heading;
-        double last_heading;
-    public:
-        Inertial(int port_num) : imu(port_num), last_heading(180), heading(0)
-        {
-            imu.set_heading(180);
-        }
-
-        void reset()
-        {
-            imu.set_heading(180);
-            heading = 0;
-            last_heading = 180;
-        }
-
-        void update()
-        {
-            heading += imu.get_heading() - last_heading;
-            last_heading = imu.get_heading();
-            imu.set_heading(180);
-        }
-
-        double get_heading(bool update_heading=true)
-        {
-            if(update_heading) update();
-            return heading;
-        }
-
-        double get_pitch()
-        {
-            return imu.get_pitch();
-        }
-
-        void set_heading(double heading)
-        {
-            last_heading = heading;
-            this->heading = heading;
-        }
-    };
 }
 
 
@@ -206,7 +161,7 @@ namespace glb
     // motors
     #define P_LEFT_FRONT 15 // PTO left
     #define P_LEFT_MID_FRONT 1
-    #define P_LEFT_MID_BACK 3
+    #define P_LEFT_MID_BACK 2
     #define P_LEFT_BACK 11
     #define P_RIGHT_FRONT 6  // PTO right
     #define P_RIGHT_MID_FRONT 7
@@ -221,7 +176,7 @@ namespace glb
     #define P_RIGHT_BACK_LIFT 'F'
     #define P_CHAIN_CLAMP 'G'
     // misc
-    #define P_IMU 7
+    #define P_IMU 12
 
     // chassis
     pros::Motor left_front(P_LEFT_FRONT, pros::E_MOTOR_GEARSET_06, false);
@@ -233,7 +188,7 @@ namespace glb
     pros::Motor right_mid_back(P_RIGHT_MID_BACK, pros::E_MOTOR_GEARSET_06, false);
     pros::Motor right_back(P_RIGHT_BACK, pros::E_MOTOR_GEARSET_06, true);
     // misc
-    obj::Inertial imu(P_IMU);
+    pros::Imu imu(P_IMU);
     pros::Controller con(pros::E_CONTROLLER_MASTER);
     // piston
     obj::Piston left_PTO(P_LPTO);

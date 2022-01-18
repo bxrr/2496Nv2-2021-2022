@@ -14,12 +14,12 @@ namespace aut
 {
     void elev()
     {
-        drive(100);
+        drive(1000);
     }
 
     void de_elev()
     {
-        drive(200);
+        drive(2000);
     }
 
     void neutral_tree()
@@ -30,17 +30,17 @@ namespace aut
 
     void win_point()
     {
-        drive(400);
+        drive(4000);
     }
 
     void rush()
     {
-        drive(600);
+        drive(300);
     }
 
     void skills()
     {
-        drive(1000);
+        rotate(45);
     }
 
     // callable list of autons

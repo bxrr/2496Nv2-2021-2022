@@ -7,12 +7,15 @@
 
 namespace pid
 {
+    double global_heading = 0;
+
     obj::PID drive_pid(2.0, 0, 0, 0.05);
     obj::PID auto_straight_pid(2.0);
     obj::PID rotate_pid(2.0, 0, 0);
 
     void drive(double distance, int timeout=5000, double multiplier=1.0, double error_range=5)
     {
+        glb::imu.set_heading(180);
         double target = mtr::pos() + distance;
         double start_heading = glb::imu.get_heading();
         long long timer = 0;
@@ -32,7 +35,7 @@ namespace pid
             mtr::spin_right(base_speed - correction_speed, mtr::chas);
 
             // print error
-            if(timer % 50 == 0) { glb::con.print(1, 0, "Err: %lf", target - cur_pos); }
+            if(timer % 50 == 0) { glb::con.print(0, 0, "Err: %lf        ", target - cur_pos); }
 
             // check loop break condition
             if(target - cur_pos <= error_range)
@@ -52,10 +55,14 @@ namespace pid
         }
         // stop chassis once out of loop
         mtr::stop(mtr::chas);
+
+        global_heading += glb::imu.get_heading() - start_heading;
     }
 
     void rotate(double degrees, int timeout=5000, double multiplier=1.0, double error_range=0.3)
     {
+        if(degrees > 0) glb::imu.set_heading(10);
+        else imu.set_heading(350);
         double start_heading = glb::imu.get_heading();
         double target_heading = start_heading + degrees;
         long long timer = 0;
@@ -82,7 +89,7 @@ namespace pid
             mtr::spin_right(-speed);
 
             // print error
-            if(timer % 50 == 0) { glb::con.print(1, 0, "Err: %lf", error); }
+            if(timer % 50 == 0) { glb::con.print(0, 0, "Err: %lf       ", error); }
 
             // check loop break condition
             if(abs(error) <= error_range)
@@ -102,11 +109,13 @@ namespace pid
             pros::delay(5);
         }
         mtr::stop(mtr::chas);
+
+        global_heading += glb::imu.get_heading() - start_heading;
     }
 
     void rotate_to(double degree_to, int timeout=5000, double multiplier=1.0, double error_range=0.3)
     {
-        rotate(degree_to - glb::imu.get_heading(), timeout, multiplier, error_range);
+        rotate(degree_to - global_heading, timeout, multiplier, error_range);
     }
 }
 

@@ -34,12 +34,10 @@ void opcontrol()
 
     bool disabled = false;
     bool run_once = true;
-    int start_time = pros::millis();
-    int time;
+    long long time = 0;
 
     while(true)
     {
-        time = pros::millis() - start_time;
         disabled = disable_all();
 
         if(!disabled)
@@ -50,13 +48,16 @@ void opcontrol()
             twobar_control();
             clamp_control();
 
-
+            if(glb::con.get_digital(pros::E_CONTROLLER_DIGITAL_DOWN)) autonomous();
             if(time % 1000 == 0) print_temp(chas, 2);
         }
         else
         {
-            if(time % 50 == 0) glb::con.set_text(0, 0, "DISABLED      ");
+            if(time % 500 == 0) glb::con.print(0, 0, "%lf       ", glb::imu.get_heading());
             mtr::stop();
         }   
+
+        pros::delay(1);
+        time++;
     }
 }

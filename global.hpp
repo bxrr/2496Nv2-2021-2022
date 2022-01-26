@@ -27,13 +27,15 @@ namespace obj
         }
 
         // methods
-        void set(bool extend_val)
+        bool set(bool extend_val)
         {
             if(extended != extend_val)
             {
                 extended = extend_val;
                 pneu.set_value(extend_val);
+                return true;
             }
+            return false;
         }
 
         void toggle()
@@ -168,13 +170,11 @@ namespace glb
     #define P_RIGHT_MID_BACK 19
     #define P_RIGHT_BACK 9
     // pistons
-    #define P_LPTO 'A'
-    #define P_RPTO 'B'
-    #define P_LEFT_FRONT_CLAMP 'C'
-    #define P_RIGHT_FRONT_CLAMP 'D'
-    #define P_LEFT_BACK_LIFT 'E'
-    #define P_RIGHT_BACK_LIFT 'F'
-    #define P_CHAIN_CLAMP 'G'
+    #define P_PTO 'A'
+    #define P_LEFT_BACK_LIFT 'D'
+    #define P_RIGHT_BACK_LIFT 'C'
+    #define P_CHAIN_CLAMP 'B'
+    #define P_FRONT_CLAMP 'E'
     // misc
     #define P_IMU 12
 
@@ -191,10 +191,8 @@ namespace glb
     pros::Imu imu(P_IMU);
     pros::Controller con(pros::E_CONTROLLER_MASTER);
     // piston
-    obj::Piston left_PTO(P_LPTO);
-    obj::Piston right_PTO(P_RPTO);
-    obj::Piston lfront_clamp(P_LEFT_FRONT_CLAMP, true);
-    obj::Piston rfront_clamp(P_RIGHT_FRONT_CLAMP, true);
+    obj::Piston PTO(P_PTO);
+    obj::Piston front_clamp(P_FRONT_CLAMP, true);
     obj::Piston lback_lift(P_LEFT_BACK_LIFT);
     obj::Piston rback_lift(P_RIGHT_BACK_LIFT);
     obj::Piston chain_clamp(P_CHAIN_CLAMP);

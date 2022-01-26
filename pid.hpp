@@ -9,7 +9,7 @@ namespace pid
 {
     double global_heading = 0;
 
-    obj::PID drive_pid(1.5, 0, 0, 0.05);
+    obj::PID drive_pid(0.6, 0, 0, 0.01);
     obj::PID auto_straight_pid(2.0);
     obj::PID rotate_pid(2.0, 0, 0);
 
@@ -62,7 +62,7 @@ namespace pid
     void rotate(double degrees, int timeout=5000, double multiplier=1.0, double error_range=0.3)
     {
         if(degrees > 0) glb::imu.set_heading(10);
-        else imu.set_heading(350);
+        else glb::imu.set_heading(350);
         double start_heading = glb::imu.get_heading();
         double target_heading = start_heading + degrees;
         long long timer = 0;

@@ -8,6 +8,8 @@
 using namespace glb;
 using namespace mtr;
 
+
+
 typedef void(*fptr)(); // function pointer declaration
 
 void PTO_on() // access lift
@@ -34,26 +36,6 @@ bool disable_all()
     }
     else first_press = true;
     return disabled;
-}
-
-void init_twobar()
-{
-    glb::lback_lift.initialize();
-    glb::rback_lift.initialize();
-
-    lback_lift.toggle();
-    rback_lift.toggle();
-    pros::delay(50);
-    lback_lift.toggle();
-    rback_lift.toggle();
-}
-
-void init_pistons()
-{
-    init_twobar();
-    glb::PTO.initialize();
-    glb::front_clamp.initialize();
-    glb::chain_clamp.initialize();
 }
 
 fptr auton_selector()
@@ -114,7 +96,7 @@ void s_hold(Mode mode=chas)
 
 void arcade_drive(bool all_motors)
 {
-    Mode mode = all;
+    Mode mode;
     if(all_motors) mode = all;
     else mode = chas;
     
@@ -147,7 +129,7 @@ void tank_drive(bool all_motors)
 }
 
 // controls
-bool PTO_control()
+void PTO_control()
 {
     static bool first_press = true;
     if(glb::con.get_digital(pros::E_CONTROLLER_DIGITAL_L2) && glb::con.get_digital(pros::E_CONTROLLER_DIGITAL_L1))
@@ -167,7 +149,6 @@ bool PTO_control()
         }
     }
     else first_press = true;
-    return !(glb::PTO.status());
 }
 
 void chainbar_control()
@@ -182,7 +163,10 @@ void chainbar_control()
         PTO_on();
         mtr::spin(127, front);
     }
-    else mtr::stop(front);
+    else if(glb::PTO.status())
+    {
+        mtr::stop(front);
+    }
 
     static bool first_press = true;
     if(glb::con.get_digital(pros::E_CONTROLLER_DIGITAL_L2) && glb::con.get_digital(pros::E_CONTROLLER_DIGITAL_R2))
@@ -226,9 +210,9 @@ void clamp_control()
     else first_press = true;
 }
 
-void print_temp(Mode mode=chas, int line=1) // lines: 0-2
+void print_temp(Mode mode=chas, int line=0) // lines: 0-2
 {
-    glb::con.print(0, line, "Temp: %.1lf        ", mtr::get_temp(mode));
+    glb::con.print(line, 0, "Temp: %.1lf        ", mtr::get_temp(mode));
 }
 
 #endif

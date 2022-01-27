@@ -163,7 +163,7 @@ namespace glb
     // motors
     #define P_LEFT_FRONT 15 // PTO left
     #define P_LEFT_MID_FRONT 1
-    #define P_LEFT_MID_BACK 2
+    #define P_LEFT_MID_BACK 4
     #define P_LEFT_BACK 11
     #define P_RIGHT_FRONT 6  // PTO right
     #define P_RIGHT_MID_FRONT 7
@@ -176,7 +176,7 @@ namespace glb
     #define P_CHAIN_CLAMP 'B'
     #define P_FRONT_CLAMP 'E'
     // misc
-    #define P_IMU 12
+    #define P_IMU 3
 
     // chassis
     pros::Motor left_front(P_LEFT_FRONT, pros::E_MOTOR_GEARSET_06, false);
@@ -196,6 +196,25 @@ namespace glb
     obj::Piston lback_lift(P_LEFT_BACK_LIFT);
     obj::Piston rback_lift(P_RIGHT_BACK_LIFT);
     obj::Piston chain_clamp(P_CHAIN_CLAMP);
+
+    void init_pistons()
+    {
+        glb::PTO.initialize();
+        glb::front_clamp.initialize();
+        glb::chain_clamp.initialize();
+    }
+
+    void init_twobar()
+    {
+        glb::lback_lift.initialize();
+        glb::rback_lift.initialize();
+
+        lback_lift.toggle();
+        rback_lift.toggle();
+        pros::delay(50);
+        lback_lift.toggle();
+        rback_lift.toggle();
+    }
 }
 
 

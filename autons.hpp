@@ -6,12 +6,18 @@
 #include "global.hpp"
 #include <vector>
 #include <string>
+
 using namespace pid;
 using namespace glb;
 
 
 namespace aut
 {
+    void driver()
+    {
+        glb::init_twobar();
+    }
+
     void elev()
     {
         drive(1000);
@@ -19,13 +25,14 @@ namespace aut
 
     void de_elev()
     {
-        drive(2000);
+        drive(-1000);
     }
 
     void neu_tree()
     {
         rotate(90);
         rotate(-90);
+        rotate_to(180);
     }
 
     void win_point()
@@ -44,8 +51,8 @@ namespace aut
     }
 
     // callable list of autons
-    std::vector<void (*)()> auton_list{elev, de_elev, neu_tree, win_point, rush, skills};
-    std::vector<std::string> auton_names{"elev", "de_elev", "neu_tree", "win_point", "rush", "skills"};
+    std::vector<void (*)()> auton_list{driver, elev, de_elev, neu_tree, win_point, rush, skills};
+    std::vector<std::string> auton_names{"driver", "elev", "de_elev", "neu_tree", "win_point", "rush", "skills"};
 }
 
 

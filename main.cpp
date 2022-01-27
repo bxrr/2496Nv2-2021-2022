@@ -17,21 +17,23 @@ void initialize()
     mtr::set_brake(coast, all);
 
     auton = auton_selector();
+    glb::con.clear();
+    mtr::set_brake(hold, front);
+    mtr::reset_pos();
+    glb::init_pistons();
 }
 
 void disabled() {}
 
 void competition_initialize() {auton = auton_selector();}
 
-void autonomous() { (*auton)(); }
+void autonomous() 
+{
+    (*auton)(); 
+}
 
 void opcontrol() 
 {
-    glb::con.clear();
-    init_pistons();
-    mtr::set_brake(hold, front);
-    mtr::reset_pos();
-
     bool disabled = false;
     bool run_once = true;
     long long time = 0;
@@ -43,17 +45,18 @@ void opcontrol()
         if(!disabled)
         {
             // driver.hpp control functions
-            arcade_drive(PTO_control());
+            PTO_control();
+            arcade_drive(!PTO.status());
             chainbar_control();
             twobar_control();
             clamp_control();
 
             if(glb::con.get_digital(pros::E_CONTROLLER_DIGITAL_DOWN)) autonomous();
-            if(time % 1000 == 0) print_temp(chas, 2);
+            if(time % 1000 == 0) print_temp(chas);
         }
         else
         {
-            if(time % 500 == 0) glb::con.print(0, 0, "%lf       ", glb::imu.get_heading());
+            if(time % 500 == 0) glb::con.print(0, 0, "%d", glb::PTO.status());
             mtr::stop();
         }   
 

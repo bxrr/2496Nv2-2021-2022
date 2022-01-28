@@ -15,7 +15,7 @@ namespace aut
 {
     void driver()
     {
-        glb::init_twobar();
+        init_twobar();
     }
 
     void elev()

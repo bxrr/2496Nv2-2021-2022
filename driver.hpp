@@ -50,7 +50,7 @@ fptr auton_selector()
     {
         if(!glb::con.get_digital(pros::E_CONTROLLER_DIGITAL_A))
         {
-            if(timer % 10 == 0) glb::con.print(0, 1, "Select: %s         ", aut::auton_names.at(selected));
+            if(timer % 10 == 0) glb::con.print(0, 0, "Select: %s         ", aut::auton_names.at(selected));
 
             if(glb::con.get_digital(pros::E_CONTROLLER_DIGITAL_LEFT))
             {
@@ -75,7 +75,7 @@ fptr auton_selector()
         else
         {
             pros::delay(50);
-            glb::con.print(0, 1, "Selected        ");
+            glb::con.print(0, 0, "Selected           ");
             pros::delay(1500);
             return aut::auton_list.at(selected);
         }
@@ -132,7 +132,7 @@ void tank_drive(bool all_motors)
 void PTO_control()
 {
     static bool first_press = true;
-    if(glb::con.get_digital(pros::E_CONTROLLER_DIGITAL_L2) && glb::con.get_digital(pros::E_CONTROLLER_DIGITAL_L1))
+    if(glb::con.get_digital(pros::E_CONTROLLER_DIGITAL_L1) && glb::con.get_digital(pros::E_CONTROLLER_DIGITAL_R2))
     {
         if(first_press)
         {
@@ -199,7 +199,7 @@ void twobar_control()
 void clamp_control()
 {
     static bool first_press = true;
-    if(glb::con.get_digital(pros::E_CONTROLLER_DIGITAL_L1) && glb::con.get_digital(pros::E_CONTROLLER_DIGITAL_R2))
+    if(glb::con.get_digital(pros::E_CONTROLLER_DIGITAL_L2) && glb::con.get_digital(pros::E_CONTROLLER_DIGITAL_L1))
     {
         if(first_press)
         {
@@ -212,7 +212,7 @@ void clamp_control()
 
 void print_temp(Mode mode=chas, int line=0) // lines: 0-2
 {
-    glb::con.print(line, 0, "Temp: %.1lf        ", mtr::get_temp(mode));
+    glb::con.print(line, 0, "TEMP: %.1lf        ", mtr::get_temp(mode));
 }
 
 #endif

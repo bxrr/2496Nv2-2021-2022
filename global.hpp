@@ -2,6 +2,7 @@
 #define __GLOBALS_H__
 
 #include "main.h"
+#include <string.h>
 
 
 // additional class definitions ================================================================
@@ -22,7 +23,6 @@ namespace obj
 
         void initialize()
         {
-            extended = start_status;
             set(start_status);
         }
 
@@ -192,28 +192,19 @@ namespace glb
     pros::Controller con(pros::E_CONTROLLER_MASTER);
     // piston
     obj::Piston PTO(P_PTO);
-    obj::Piston front_clamp(P_FRONT_CLAMP, true);
-    obj::Piston lback_lift(P_LEFT_BACK_LIFT);
-    obj::Piston rback_lift(P_RIGHT_BACK_LIFT);
-    obj::Piston chain_clamp(P_CHAIN_CLAMP);
+    obj::Piston front_clamp(P_FRONT_CLAMP);
+    obj::Piston lback_lift(P_LEFT_BACK_LIFT, true);
+    obj::Piston rback_lift(P_RIGHT_BACK_LIFT, true);
+    obj::Piston chain_clamp(P_CHAIN_CLAMP, true);
 
     void init_pistons()
     {
         glb::PTO.initialize();
         glb::front_clamp.initialize();
         glb::chain_clamp.initialize();
-    }
-
-    void init_twobar()
-    {
         glb::lback_lift.initialize();
         glb::rback_lift.initialize();
-
-        lback_lift.toggle();
-        rback_lift.toggle();
-        pros::delay(50);
-        lback_lift.toggle();
-        rback_lift.toggle();
+        
     }
 }
 
@@ -227,6 +218,13 @@ namespace mtr
     // Enumerations
     enum BrakeType {coast, hold};
     enum Mode {all, chas, front};
+
+    void lift_spin(double enc, double speed)
+    {
+        glb::PTO.set(true);
+        glb::left_front.move_relative(enc, speed);
+        glb::right_front.move_relative(enc, speed);
+    }
     
     // Function group
     void spin_left(double speed, Mode mode=all) // value range from -127 to 127

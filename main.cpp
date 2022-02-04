@@ -35,6 +35,7 @@ void autonomous()
 void opcontrol() 
 {
     bool disabled = false;
+    bool print_battery = false;
     bool run_once = true;
     long long time = 0;
 
@@ -52,11 +53,27 @@ void opcontrol()
             clamp_control();
 
             if(glb::con.get_digital(pros::E_CONTROLLER_DIGITAL_DOWN)) autonomous();
-            if(time % 1000 == 0) print_temp(chas);
+            if(glb::con.get_digital(pros::E_CONTROLLER_DIGITAL_RIGHT)) print_battery = true;
+            if(glb::con.get_digital(pros::E_CONTROLLER_DIGITAL_LEFT)) print_battery = false;
+
+            std::string eight_motor;
+            if(PTO.status())
+                eight_motor = "true";
+            else
+                eight_motor = "false";
+            if(time % 50 == 0 && time % 500 != 0) glb::con.print(0, 0, "8M DRIVE: %s           ", eight_motor);
+            if(time % 500 == 0 && time % 1000 != 0) 
+            {
+                if(print_battery)
+                    glb::con.print(1, 0, "BATTERY: %.0f         ", battery::get_capacity());
+                else
+                    glb::con.print(1, 0, "INERTIAL: %.5f         ", glb::imu.get_heading());
+            }
+            if(time % 1000 == 0) print_temp(chas, 2);
         }
         else
         {
-            if(time % 500 == 0) glb::con.print(0, 0, "%d", glb::PTO.status());
+            if(time % 50 == 0) glb::con.print(0, 0, "DISABLED         ");
             mtr::stop();
         }   
 

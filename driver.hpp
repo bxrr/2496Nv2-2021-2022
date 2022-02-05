@@ -9,17 +9,25 @@ using namespace glb;
 using namespace mtr;
 
 
-
+ 
 typedef void(*fptr)(); // function pointer declaration
 
 void PTO_on() // access lift
 {
-    if(glb::PTO.set(true)) glb::con.set_text(3, 0, ".");
+    if(glb::PTO.set(true)) 
+    {
+        glb::con.set_text(3, 0, "."); 
+        mtr::set_brake(mtr::hold, mtr::front);
+    }
 }
 
 void PTO_off() // 8 motor drive
 {
-    if(glb::PTO.set(false)) glb::con.set_text(3, 0, "..");
+    if(glb::PTO.set(false)) 
+    {
+        glb::con.set_text(3, 0, "..");
+        mtr::set_brake(mtr::coast, mtr::front);
+    }
 }
 
 bool disable_all()
@@ -85,13 +93,17 @@ fptr auton_selector()
     }
 }
 
-void s_hold(Mode mode=chas)
+bool s_hold(bool eight_motor)
 {
+    Mode mode = (eight_motor) ? (all) : (chas);
+    if(eight_motor)
     if(abs(imu.get_pitch()) > 4.0)
     {
-        double speed = s_hold_pid.calculate(0, glb::imu.get_pitch());
+        double speed = -s_hold_pid.calculate(0, glb::imu.get_pitch());
         mtr::spin(speed, mode);
+        return true;
     }
+    return false;
 }
 
 void arcade_drive(bool all_motors)
@@ -107,7 +119,7 @@ void arcade_drive(bool all_motors)
     }
     else
     {
-        mtr::stop(mode);
+        if(!s_hold(all_motors)) mtr::stop(mode);
     }
 }
 

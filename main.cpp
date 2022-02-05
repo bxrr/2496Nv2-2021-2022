@@ -25,7 +25,11 @@ void initialize()
 
 void disabled() {}
 
-void competition_initialize() {auton = auton_selector();}
+void competition_initialize() 
+{
+    auton = auton_selector();
+    glb::init_pistons();
+}
 
 void autonomous() 
 {
@@ -58,9 +62,9 @@ void opcontrol()
 
             std::string eight_motor;
             if(PTO.status())
-                eight_motor = "true";
-            else
                 eight_motor = "false";
+            else
+                eight_motor = "true";
             if(time % 50 == 0 && time % 500 != 0) glb::con.print(0, 0, "8M DRIVE: %s           ", eight_motor);
             if(time % 500 == 0 && time % 1000 != 0) 
             {

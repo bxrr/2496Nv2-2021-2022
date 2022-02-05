@@ -5,6 +5,7 @@
 #include <string.h>
 
 
+
 // additional class definitions ================================================================
 namespace obj
 {
@@ -218,13 +219,6 @@ namespace mtr
     // Enumerations
     enum BrakeType {coast, hold};
     enum Mode {all, chas, front};
-
-    void lift_spin(double enc, double speed)
-    {
-        glb::PTO.set(true);
-        glb::left_front.move_relative(enc, speed);
-        glb::right_front.move_relative(enc, speed);
-    }
     
     // Function group
     void spin_left(double speed, Mode mode=all) // value range from -127 to 127
@@ -343,14 +337,29 @@ namespace mtr
         else return (front_avg + chas_avg) / 2;
     }
 
-    void spin_dist(double distance, double speed=127)
+    void spin_dist(double distance, bool eight_motor=true, double speed=127)
     {
+        auto mode = eight_motor ? all : chas;
         double target = left_pos() + distance;
         while(left_pos() < target)
         {
-            spin(speed);
+            spin(speed, mode);
         }
     }
-}
+    
+    void time_fwd(double time, double speed)
+    {
+        long long timer = 0;
+        while(timer <= time)
+        {
+            spin(speed,chas);
+            timer += 5;
+            pros::delay(5);
+        }
+        stop();
+        
+
+    }
+}   
 
 #endif

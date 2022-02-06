@@ -71,7 +71,7 @@ void opcontrol()
                 if(print_battery)
                     glb::con.print(1, 0, "BATTERY: %.0f         ", battery::get_capacity());
                 else
-                    glb::con.print(1, 0, "INERTIAL: %.5f         ", glb::imu.get_heading());
+                    glb::con.print(1, 0, "INERTIAL: %.5f         ", glb::imu.get_pitch());
             }
             if(time % 1000 == 0) print_temp(chas, 2);
         }

@@ -20,43 +20,31 @@ namespace aut
         PTO.set(true);
         drive(350, false, 1500);
         chain_clamp.toggle();
-        rotate(-45);
+        rotate(-45, false);
     }
 
     void elev()
     {
-        spin_dist(1680);
-        chain_clamp.toggle();
         PTO.set(true);
-        left_front.move_relative(-3000, 127);
-        right_front.move_relative(-3000, 127);
-        drive(-550, false);
-        rotate_to(90, false);
-        drive(400, false);
-        front_clamp.toggle();
-        drive(-350, false);
-    }
-
-    void de_elev()
-    {
-        spin_dist(1680);
+        drive(550, false, 1500, 0.3);
+        drive(-550, false, 1500, 0.3);
+        rotate(-45, false, 1500);
+        spin_dist(2200, false, 90);
+        spin_dist(300, false, 60);
         chain_clamp.toggle();
+        spin_dist(40, false, 50);
         PTO.set(true);
-        left_front.move_relative(-3000, 127);
-        right_front.move_relative(-3000, 127);
-        drive(-600, false);
-        rotate(-14, false);
-        drive(-800, false);
-        drive(60, false);
-        rotate(90, false);
-        drive(250, false);
+        left_front.move_relative(-5000, -600);
+        right_front.move_relative(-5000, -600);
+        drive(-2100, false);
         front_clamp.toggle();
+        rotate(60, false);
     }
 
     void elev_neu()
     {
-        spin_dist(1300);
-        spin_dist(300, 70);
+        spin_dist(1000);
+        spin_dist(600, 60);
         chain_clamp.toggle();
         spin_dist(60, 60);
         PTO.set(true);
@@ -71,57 +59,66 @@ namespace aut
         spin_dist(30, false, 40);
         lback_lift.toggle();
         rback_lift.toggle();
-        rotate_to(-58, false, 1200, 3);
+        rotate_to(-54, false, 1200, 3);
         drive(-1960, false, 6000, 0.4);
         time_fwd(1000,-35);
-        lback_lift.toggle();
-        rback_lift.toggle();
-    }
-
-    void de_elev_neu()
-    {
-        spin_dist(1680);
-        chain_clamp.toggle();
-        PTO.set(true);
-        left_front.move_relative(-3000, 127);
-        right_front.move_relative(-3000, 127);
-        drive(-400, false, 2000);
-        rotate_to(39, false, 1500);
-        drive(550, true, 2000);
-        front_clamp.toggle();
-        drive(-600, true, 2500);
     }
 
     void elev_tree()
     {
-        spin_dist(1560);
+        spin_dist(1440, true);
+        spin_dist(700, true, 65);
         chain_clamp.toggle();
-        spin_dist(40);
+        spin_dist(60, true, 60);
         PTO.set(true);
         left_front.move_relative(-5000, -600);
         right_front.move_relative(-5000, -600);
-        drive(-400, false, 1500);
-        rotate_to(60);
-        spin_dist(450);
-        spin_dist(300, 70);
+        drive(-380, false, 1200);
         front_clamp.toggle();
-        spin_dist(20, 70);
-        drive(-700, false, 2000);
+        rotate_to(78, false, 2000);
+        spin_dist(900, false, 80);
+        front_clamp.toggle();
+        spin_dist(40, false, 60);
+        spin_dist(-400, false, 90);
     }
 
-    void win_point()
-    {
-        return;
-    }
-
-    void rush()
+    void rush_elev()
     {
         spin_dist(1100);
+        spin_dist(500, 60);
         chain_clamp.toggle();
+        spin_dist(60, 60);
         PTO.set(true);
-        left_front.move_relative(-3000, 127);
-        right_front.move_relative(-3000, 127);
-        drive(-700, false);
+        left_front.move_relative(-5000, -600);
+        right_front.move_relative(-5000, -600);
+        drive(-950, false, 1500, 0.3);
+        rotate(-45, false);
+    }
+
+    void rush_de()
+    {
+        spin_dist(1300);
+        spin_dist(500, 60);
+        chain_clamp.toggle();
+        spin_dist(60, 60);
+        PTO.set(true);
+        left_front.move_relative(-5000, -600);
+        right_front.move_relative(-5000, -600);
+        drive(-950, false, 1500, 0.3);
+        rotate(45, false);
+    }
+
+    void rush_tree()
+    {
+        spin_dist(1400);
+        spin_dist(700, 60);
+        chain_clamp.toggle();
+        spin_dist(60, 60);
+        PTO.set(true);
+        left_front.move_relative(-5000, -600);
+        right_front.move_relative(-5000, -600);
+        drive(-1400, false, 1500, 0.3);
+        rotate(35, false);
     }
 
     void skills()
@@ -130,8 +127,8 @@ namespace aut
     }
 
     // callable list of autons
-    std::vector<void (*)()> auton_list{half_awp, elev, de_elev, elev_neu, de_elev_neu, win_point, rush, skills};
-    std::vector<std::string> auton_names{"half_awp", "elev", "de_elev", "elev_neu", "de_elev_neu", "win_point", "rush", "skills"};
+    std::vector<void (*)()> auton_list{half_awp, elev, elev_neu, elev_tree, rush_elev, rush_de, rush_tree, skills};
+    std::vector<std::string> auton_names{"half_awp", "elev", "elev_neu", "elev_tree", "rush_elev", "rush_de", "rush_tree", "skills"};
 }
 
 

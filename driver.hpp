@@ -47,7 +47,7 @@ bool disable_all()
     return disabled;
 }
 
-fptr auton_selector(string &aut_name)
+fptr auton_selector(std::string &aut_name)
 {
     short int selected = 0;
     long long timer = 0;
@@ -95,19 +95,6 @@ fptr auton_selector(string &aut_name)
     }
 }
 
-bool s_hold(bool eight_motor)
-{
-    Mode mode = (eight_motor) ? (all) : (chas);
-    if(eight_motor)
-    if(abs(imu.get_pitch()) > 4.0)
-    {
-        double speed = -s_hold_pid.calculate(0, glb::imu.get_pitch());
-        mtr::spin(speed, mode);
-        return true;
-    }
-    return false;
-}
-
 void arcade_drive(bool all_motors)
 {
     Mode mode;
@@ -121,7 +108,14 @@ void arcade_drive(bool all_motors)
     }
     else
     {
-        if(!s_hold(all_motors)) mtr::stop(mode);
+        if(abs(glb::imu.get_pitch()) > 2.5)
+        {
+            mtr::spin(glb::imu.get_pitch() * 5);
+        }
+        else
+        {
+            mtr::stop();
+        }
     }
 }
 
@@ -138,7 +132,14 @@ void tank_drive(bool all_motors)
     }
     else
     {
-        mtr::stop(mode);
+        if(abs(glb::imu.get_pitch()) > 2.5)
+        {
+            mtr::spin(glb::imu.get_pitch() * 5);
+        }
+        else
+        {
+            mtr::stop();
+        }
     }
 }
 
@@ -224,9 +225,27 @@ void clamp_control()
     else first_press = true;
 }
 
-void print_temp(Mode mode=chas, int line=0) // lines: 0-2
+void print_info(int time) // lines: 0-2
 {
-    glb::con.print(line, 0, "TEMP: %.1lf        ", mtr::get_temp(mode));
+    bool print_battery = false;
+    std::string eight_motor;
+
+    if(glb::PTO.status())
+        eight_motor = "false";
+    else
+        eight_motor = "true";
+
+    if(glb::con.get_digital(pros::E_CONTROLLER_DIGITAL_RIGHT)) print_battery = true;
+    if(glb::con.get_digital(pros::E_CONTROLLER_DIGITAL_LEFT)) print_battery = false;
+    if(time % 50 == 0 && time % 500 != 0) glb::con.print(0, 0, "8M DRIVE: %s           ", eight_motor);
+    if(time % 500 == 0 && time % 1000 != 0) 
+    {
+        if(print_battery)
+            glb::con.print(1, 0, "BATTERY: %.0f         ", battery::get_capacity());
+        else
+            glb::con.print(1, 0, "INERTIAL: %.5f         ", glb::imu.get_pitch());
+    }
+    if(time % 1000 == 0) glb::con.print(0, 0, "TEMP: %.1lf        ", mtr::get_temp(mtr::chas));
 }
 
 #endif

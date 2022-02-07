@@ -7,8 +7,8 @@ using namespace glb; // global variables
 
 
 // global variables
-void (*auton)() = aut::auton_list.at(0);
-std::string aut_name = aut::auton_list.at(0);
+void (*auton)() = aut::auton_calls.at(2);
+std::string aut_name = aut::auton_names.at(2);
 
 // functions
 void initialize() 
@@ -27,6 +27,9 @@ void disabled() {}
 
 void competition_initialize() 
 {
+    mtr::set_brake(coast, all);
+    mtr::reset_pos();
+    glb::init_pistons();
     glb::con.clear();
     delay(50);
     glb::con.print(0, 0, "%s          ", aut_name);
@@ -40,7 +43,6 @@ void autonomous()
 void opcontrol() 
 {
     bool disabled = false;
-    bool print_battery = false;
     bool run_once = true;
     long long time = 0;
 
@@ -56,25 +58,9 @@ void opcontrol()
             chainbar_control();
             twobar_control();
             clamp_control();
+            print_info(time);
+            
             if(glb::con.get_digital(pros::E_CONTROLLER_DIGITAL_DOWN)) autonomous();
-
-
-            std::string eight_motor;
-            if(PTO.status())
-                eight_motor = "false";
-            else
-                eight_motor = "true";
-            if(glb::con.get_digital(pros::E_CONTROLLER_DIGITAL_RIGHT)) print_battery = true;
-            if(glb::con.get_digital(pros::E_CONTROLLER_DIGITAL_LEFT)) print_battery = false;
-            if(time % 50 == 0 && time % 500 != 0) glb::con.print(0, 0, "8M DRIVE: %s           ", eight_motor);
-            if(time % 500 == 0 && time % 1000 != 0) 
-            {
-                if(print_battery)
-                    glb::con.print(1, 0, "BATTERY: %.0f         ", battery::get_capacity());
-                else
-                    glb::con.print(1, 0, "INERTIAL: %.5f         ", glb::imu.get_pitch());
-            }
-            if(time % 1000 == 0) print_temp(chas, 2);
         }
         else
         {

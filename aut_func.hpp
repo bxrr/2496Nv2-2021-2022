@@ -16,7 +16,7 @@ namespace fnc
     {
         // variables
         glb::imu.set_heading(180);
-        double start_heading = imu.get_heading();
+        double start_heading = glb::imu.get_heading();
         mtr::Mode mode = glb::PTO.status() ? mtr::chas : mtr::all;
         double target = mtr::pos(mode) + distance;
 
@@ -43,7 +43,7 @@ namespace fnc
                 speed = ((87.5 * abs(error)) / offset) + max_speed * sin((PI * 50) / (2 * offset)) - (4375 / offset);
             
             speed = error < 0 ? -speed : speed;
-            double auto_straight = (start_heading - imu.get_heading()) * AUTO_STRAIGHT_KP;
+            double auto_straight = (start_heading - glb::imu.get_heading()) * AUTO_STRAIGHT_KP;
             
             // apply speeds
             mtr::spin_left(speed + auto_straight, mode);
@@ -65,38 +65,38 @@ namespace fnc
             else within_range = false;
 
             // increment time
-            delay(1);
+            pros::delay(1);
             time += 1;
         }
         // stop motors once out of loop
         mtr::stop(mode);
-        global_heading += imu.get_heading() - start_heading;
+        global_heading += glb::imu.get_heading() - start_heading;
     }
 
     void spin_dist(double distance, double speed=127, int timeout=5000)
     {
         // variables
         glb::imu.set_heading(180);
-        double start_heading = imu.get_heading();
+        double start_heading = glb::imu.get_heading();
         double target = mtr::pos() + distance;
         mtr::Mode mode = glb::PTO.status() ? mtr::chas : mtr::all;
         speed = distance < 0 ? -abs(speed) : abs(speed);
 
         int time = 0;
         // control loop
-        while((distance < 0 ? mtr::pos() > target : mtr::pos < target) && time < timeout)
+        while((distance < 0 ? mtr::pos() > target : mtr::pos() < target) && time < timeout)
         {
             // calculate auto straight and apply speeds
-            double auto_straight = (start_heading - imu.get_heading())) * AUTO_STRAIGHT_KP;
+            double auto_straight = (start_heading - glb::imu.get_heading()) * AUTO_STRAIGHT_KP;
             mtr::spin_left(speed + auto_straight, mode);
             mtr::spin_right(speed - auto_straight, mode);
 
-            delay(1);
+            pros::delay(1);
             time += 1;
         }
         // stop motors once out of loop
         mtr::stop(mode);
-        global_heading += imu.get_heading() - start_heading;
+        global_heading += glb::imu.get_heading() - start_heading;
     }
 
     void rotate(double degrees, int timeout=5000, float multiplier=1.0)
@@ -141,8 +141,8 @@ namespace fnc
             else within_range = false;
 
             // increment time
-            delay(1);
-            timer += 1;
+            pros::delay(1);
+            time += 1;
         }
     }
 
@@ -156,8 +156,8 @@ namespace fnc
         speed = distance < 0 ? -abs(speed) : abs(speed);
         glb::PTO.set(true);
         mtr::set_brake(mtr::hold, mtr::front);
-        left_front.move_relative(distance, speed);
-        right_front.move_relative(distance, speed);
+        glb::left_front.move_relative(distance, speed);
+        glb::right_front.move_relative(distance, speed);
     }
 
     void toggle_2bar()

@@ -15,12 +15,24 @@ namespace aut
 {
     void test()
     {
-        spin_lift(-5000)
+        spin_lift(-5000);
         drive(1000);
         rotate(90);
     }
 
-    void elev() // half awp + middle goal
+    void half_awp()
+    {
+        drive(500);
+        front_clamp.toggle();
+        delay(100);
+        spin_lift(-5000);
+        delay(100);
+        drive(-500);
+        rotate(-30);
+        drive(800);
+    }
+
+    void elev() // half awp -> middle goal -> neutral goal
     {
         drive(500);
         front_clamp.toggle();
@@ -32,7 +44,7 @@ namespace aut
         toggle_2bar();
         drive(-2400);
         toggle_2bar();
-        spin_dist(-50, -70)
+        spin_dist(-50, -70);
         drive(500);
         rotate_to(45);
         drive(700);
@@ -42,8 +54,8 @@ namespace aut
     }
 
     // callable list of autons
-    std::vector<void (*)()>  auton_calls{ test,   half_awp };
-    std::vector<std::string> auton_names{"test", "half_awp"};
+    std::vector<void (*)()>  auton_calls{ test,   half_awp,   elev };
+    std::vector<std::string> auton_names{"test", "half_awp", "elev"};
 }
 
 

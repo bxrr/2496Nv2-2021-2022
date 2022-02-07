@@ -114,9 +114,6 @@ namespace glb
 // additional function groups ==================================================================
 namespace mtr
 {
-    // PID objects
-    obj::PID s_hold_pid(0.7, 0, 0, 0);
-
     // Enumerations
     enum BrakeType {coast, hold};
     enum Mode {all, chas, front};

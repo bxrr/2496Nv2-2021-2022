@@ -2,12 +2,13 @@
 #include "driver.hpp"
 #include "global.hpp"
 #include "autons.hpp"
-using namespace pros;
+#include <string>
 using namespace glb; // global variables
 
 
 // global variables
 void (*auton)() = aut::auton_list.at(0);
+std::string aut_name = aut::auton_list.at(0);
 
 // functions
 void initialize() 
@@ -16,9 +17,8 @@ void initialize()
     pros::lcd::set_text(0, "2496NextLevelNinjas");
     mtr::set_brake(coast, all);
 
-    auton = auton_selector();
+    auton = auton_selector(aut_name);
     glb::con.clear();
-    mtr::set_brake(hold, front);
     mtr::reset_pos();
     glb::init_pistons();
 }
@@ -27,8 +27,9 @@ void disabled() {}
 
 void competition_initialize() 
 {
-    auton = auton_selector();
-    glb::init_pistons();
+    glb::con.clear();
+    delay(50);
+    glb::con.print(0, 0, "%s          ", aut_name);
 }
 
 void autonomous() 
@@ -55,16 +56,16 @@ void opcontrol()
             chainbar_control();
             twobar_control();
             clamp_control();
-
             if(glb::con.get_digital(pros::E_CONTROLLER_DIGITAL_DOWN)) autonomous();
-            if(glb::con.get_digital(pros::E_CONTROLLER_DIGITAL_RIGHT)) print_battery = true;
-            if(glb::con.get_digital(pros::E_CONTROLLER_DIGITAL_LEFT)) print_battery = false;
+
 
             std::string eight_motor;
             if(PTO.status())
                 eight_motor = "false";
             else
                 eight_motor = "true";
+            if(glb::con.get_digital(pros::E_CONTROLLER_DIGITAL_RIGHT)) print_battery = true;
+            if(glb::con.get_digital(pros::E_CONTROLLER_DIGITAL_LEFT)) print_battery = false;
             if(time % 50 == 0 && time % 500 != 0) glb::con.print(0, 0, "8M DRIVE: %s           ", eight_motor);
             if(time % 500 == 0 && time % 1000 != 0) 
             {

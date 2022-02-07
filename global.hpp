@@ -5,7 +5,6 @@
 #include <string.h>
 
 
-
 // additional class definitions ================================================================
 namespace obj
 {
@@ -58,103 +57,6 @@ namespace obj
             return extended;
         }
     };
-
-
-    class PID
-    {
-    private:
-        double integral;
-        double last_error;
-        float slew;
-        float kP, kI, kD;
-        float init_kP, init_kI, init_kD;
-    public:
-        PID(float kP, float kI=0, float kD=0, float slew=1) : integral(0), last_error(0)
-        {
-            this->kP = kP;
-            this->kI = kI;
-            this->kD = kD;
-
-            this->slew = slew;
-
-            init_kP = kP;
-            init_kI = kI;
-            init_kD = kD;
-        }
-
-        void set_kP(float new_kP)
-        {
-            kP = new_kP;
-        }
-        
-        void set_kI(float new_kI)
-        {
-            kI = new_kI;
-        }
-        
-        void set_kD(float new_kD)
-        {
-            kD = new_kD;
-        }
-
-        float get_kP()
-        {
-            return kP;
-        }
-        
-        float get_kI()
-        {
-            return kI;
-        }
-        
-        float get_kD()
-        {
-            return kD;
-        }
-
-        void increment_slew()
-        {
-            static float slew_increment = slew;
-            static bool first_run = true;
-            if(first_run)
-            {
-                first_run = false;
-                return;
-            }
-            if(slew > 1) slew = 1;
-            else slew += slew_increment;
-            if(slew > 1) slew = 1;
-        }
-
-        double calculate(double target, double current, bool count_integral=false, bool add_slew=true)
-        {
-            static double error = 0;
-            if(add_slew) increment_slew();
-            last_error = error;
-            error = target - current;
-            if(count_integral) integral += error;
-            return slew * ((error * kP) + (integral * kI) + ((error - last_error) * kD)); 
-        }
-
-        void reset_integral()
-        {
-            integral = 0;
-        }
-
-        void modify(float new_kP=-999, float new_kI=-999, float new_kD=-999)
-        {
-            if(new_kP != -999) kP = new_kP;
-            if(new_kI != -999) kI = new_kI;
-            if(new_kD != -999) kD = new_kD;
-        }
-
-        void reset()
-        {
-            kP = init_kP;
-            kI = init_kI;
-            kD = init_kD;
-        }
-    };
 }
 
 
@@ -205,7 +107,6 @@ namespace glb
         glb::chain_clamp.initialize();
         glb::lback_lift.initialize();
         glb::rback_lift.initialize();
-        
     }
 }
 
@@ -335,30 +236,6 @@ namespace mtr
         if(mode == front) return front_avg;
         else if(mode == chas) return chas_avg;
         else return (front_avg + chas_avg) / 2;
-    }
-
-    void spin_dist(double distance, bool eight_motor=true, double speed=127)
-    {
-        auto mode = eight_motor ? all : chas;
-        double target = left_pos() + distance;
-        while(left_pos() < target)
-        {
-            spin(speed, mode);
-        }
-    }
-    
-    void time_fwd(double time, double speed)
-    {
-        long long timer = 0;
-        while(timer <= time)
-        {
-            spin(speed,chas);
-            timer += 5;
-            pros::delay(5);
-        }
-        stop();
-        
-
     }
 }   
 

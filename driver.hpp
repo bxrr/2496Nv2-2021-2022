@@ -4,6 +4,7 @@
 #include "main.h"
 #include "global.hpp"
 #include "autons.hpp"
+#include <string>
 
 using namespace glb;
 using namespace mtr;
@@ -46,7 +47,7 @@ bool disable_all()
     return disabled;
 }
 
-fptr auton_selector()
+fptr auton_selector(string &aut_name)
 {
     short int selected = 0;
     long long timer = 0;
@@ -85,7 +86,8 @@ fptr auton_selector()
             pros::delay(50);
             glb::con.print(0, 0, "Selected           ");
             pros::delay(1500);
-            return aut::auton_list.at(selected);
+            aut_name = aut::auton_names.at(selected);
+            return aut::auton_calls.at(selected);
         }
 
         pros::delay(1);

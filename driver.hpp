@@ -108,9 +108,9 @@ void arcade_drive(bool all_motors)
     }
     else
     {
-        if(abs(glb::imu.get_pitch()) > 2.5)
+        if(abs(glb::imu.get_pitch()) > 6)
         {
-            mtr::spin(glb::imu.get_pitch() * 5);
+            mtr::spin(-glb::imu.get_pitch() * 1.5);
         }
         else
         {
@@ -132,9 +132,9 @@ void tank_drive(bool all_motors)
     }
     else
     {
-        if(abs(glb::imu.get_pitch()) > 2.5)
+        if(abs(glb::imu.get_pitch()) > 6)
         {
-            mtr::spin(glb::imu.get_pitch() * 5);
+            mtr::spin(-glb::imu.get_pitch() * 1.5);
         }
         else
         {
@@ -227,7 +227,7 @@ void clamp_control()
 
 void print_info(int time) // lines: 0-2
 {
-    bool print_battery = false;
+    static bool print_battery = false;
     std::string eight_motor;
 
     if(glb::PTO.status())
@@ -241,11 +241,11 @@ void print_info(int time) // lines: 0-2
     if(time % 500 == 0 && time % 1000 != 0) 
     {
         if(print_battery)
-            glb::con.print(1, 0, "BATTERY: %.0f         ", battery::get_capacity());
+            glb::con.print(1, 0, "BATTERY: %.2f         ", (glb::left_front.get_voltage() + glb::right_front.get_voltage() ) /2);
         else
             glb::con.print(1, 0, "INERTIAL: %.5f         ", glb::imu.get_pitch());
     }
-    if(time % 1000 == 0) glb::con.print(0, 0, "TEMP: %.1lf        ", mtr::get_temp(mtr::chas));
+    if(time % 1000 == 0) glb::con.print(2, 0, "TEMP: %.1lf        ", mtr::get_temp(mtr::chas));
 }
 
 #endif

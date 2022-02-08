@@ -123,7 +123,10 @@ namespace fnc
 
             // apply speeds
             mtr::spin_left(speed, mode);
-            mtr::spin_right(speed, mode);
+            mtr::spin_right(-speed, mode);
+
+            // print error
+            if(time % 50 == 0) glb::con.print(0, 1, "err: f%", error);
 
             // check for exit
             if(error <= within_range_err)

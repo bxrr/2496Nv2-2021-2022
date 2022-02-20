@@ -12,7 +12,7 @@ namespace fnc
     #define AUTO_STRAIGHT_KP 3
     double global_heading = 0;
 
-    void drive(double distance, int timeout=5000, double max_speed=112, double offset=350)
+    void drive(double distance, int timeout=5000, double max_speed=112, double offset=700)
     {
         // variables
         glb::imu.set_heading(180);
@@ -21,7 +21,7 @@ namespace fnc
         double target = mtr::pos(mode) + distance;
 
         bool within_range = false;
-        double within_range_err = 10;
+        double within_range_err = 5;
         int within_range_exit = 300;
         int within_range_time;
 
@@ -37,10 +37,10 @@ namespace fnc
             // calculate speeds
             if(abs(error) >= offset)
                 speed = max_speed;
-            else if(abs(error) >= 50 && abs(error) < offset)
+            else if(abs(error) >= 75 && abs(error) < offset)
                 speed = max_speed * sin((PI * abs(error)) / (2 * offset));
             else
-                speed = ((87.5 * abs(error)) / offset) + max_speed * sin((PI * 50) / (2 * offset)) - (4375 / offset);
+                speed = 90 / offset * abs(error) + 8;
             
             speed = error < 0 ? -speed : speed;
             double auto_straight = (start_heading - glb::imu.get_heading()) * AUTO_STRAIGHT_KP;
@@ -48,6 +48,9 @@ namespace fnc
             // apply speeds
             mtr::spin_left(speed + auto_straight, mode);
             mtr::spin_right(speed - auto_straight, mode);
+
+            // print error
+            if(time % 50 == 0) glb::con.print(0, 0, "err: %f      ", error);
             
             // check for exit
             if(abs(error) <= within_range_err)
@@ -83,6 +86,7 @@ namespace fnc
         speed = distance < 0 ? -abs(speed) : abs(speed);
 
         int time = 0;
+
         // control loop
         while((distance < 0 ? mtr::pos() > target : mtr::pos() < target) && time < timeout)
         {
@@ -94,31 +98,33 @@ namespace fnc
             pros::delay(1);
             time += 1;
         }
+
         // stop motors once out of loop
         mtr::stop(mode);
         global_heading += glb::imu.get_heading() - start_heading;
     }
-
+   
     void rotate(double degrees, int timeout=5000, float multiplier=1.0)
     {
         // variables
-        double start_heading = degrees > 0 ? 310 : 10;
+        double start_heading = degrees > 0 ? 25 : 335;
         glb::imu.set_heading(start_heading);
         double target = glb::imu.get_heading() + degrees;
         mtr::Mode mode = glb::PTO.status() ? mtr::chas : mtr::all;
 
         bool within_range = false;
-        bool within_range_err = 0.1;
-        bool within_range_exit = 300;
-        bool within_range_time;
+        double within_range_err = 0.1;
+        int within_range_exit = 300;
+        int within_range_time;
 
         int time = 0;
+
         // control loop
         while(time < timeout)
         {
             // calculate variables
             double error = target - glb::imu.get_heading();
-            double speed = (multiplier * 30) * log(0.25 * (abs(error) + 4)) + 5;
+            double speed = (multiplier * 25) * log(0.25 * (abs(error) + 4)) + 8;
             speed = error < 0 ? -speed : speed;
 
             // apply speeds
@@ -126,10 +132,10 @@ namespace fnc
             mtr::spin_right(-speed, mode);
 
             // print error
-            if(time % 50 == 0) glb::con.print(0, 1, "err: f%", error);
+            if(time % 50 == 0) glb::con.print(0, 0, "err: %f      ", error);
 
             // check for exit
-            if(error <= within_range_err)
+            if(abs(error) <= within_range_err)
             {
                 if(!within_range)
                 {
@@ -154,7 +160,7 @@ namespace fnc
         rotate(degree_to - global_heading, timeout, multiplier);
     }
 
-    inline void spin_lift(double distance, double speed=127) // negative = up, positive = down
+    inline void spin_lift(double distance, double speed=600) // negative = up, positive = down
     {
         speed = distance < 0 ? -abs(speed) : abs(speed);
         glb::PTO.set(true);

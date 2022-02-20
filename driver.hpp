@@ -116,6 +116,7 @@ void arcade_drive(bool all_motors)
         {
             mtr::stop();
         }
+        mtr::stop();
     }
 }
 
@@ -171,12 +172,12 @@ void chainbar_control()
     if(glb::con.get_digital(pros::E_CONTROLLER_DIGITAL_R1) && !glb::con.get_digital(pros::E_CONTROLLER_DIGITAL_L1) && !glb::con.get_digital(pros::E_CONTROLLER_DIGITAL_L2) && !glb::con.get_digital(pros::E_CONTROLLER_DIGITAL_R2)) 
     {
         PTO_on();
-        mtr::spin(-127, front);
+        mtr::spin(127, front);
     }
     else if(glb::con.get_digital(pros::E_CONTROLLER_DIGITAL_R2) && !glb::con.get_digital(pros::E_CONTROLLER_DIGITAL_L1) && !glb::con.get_digital(pros::E_CONTROLLER_DIGITAL_L2) && !glb::con.get_digital(pros::E_CONTROLLER_DIGITAL_R1)) 
     {
         PTO_on();
-        mtr::spin(127, front);
+        mtr::spin(-127, front);
     }
     else if(glb::PTO.status())
     {
@@ -227,7 +228,7 @@ void clamp_control()
 
 void print_info(int time) // lines: 0-2
 {
-    static bool print_battery = false;
+    static bool print_battery = true;
     std::string eight_motor;
 
     if(glb::PTO.status())
@@ -235,15 +236,15 @@ void print_info(int time) // lines: 0-2
     else
         eight_motor = "true";
 
-    if(glb::con.get_digital(pros::E_CONTROLLER_DIGITAL_RIGHT)) print_battery = true;
-    if(glb::con.get_digital(pros::E_CONTROLLER_DIGITAL_LEFT)) print_battery = false;
-    if(time % 50 == 0 && time % 500 != 0) glb::con.print(0, 0, "8M DRIVE: %s           ", eight_motor);
+    if(glb::con.get_digital(pros::E_CONTROLLER_DIGITAL_RIGHT)) print_battery = false;
+    if(glb::con.get_digital(pros::E_CONTROLLER_DIGITAL_LEFT)) print_battery = true;
+    if(time % 400 == 0 && time % 500 != 0 && time % 1000 != 0) glb::con.print(0, 0, "8M DRIVE: %s           ", eight_motor);
     if(time % 500 == 0 && time % 1000 != 0) 
     {
         if(print_battery)
-            glb::con.print(1, 0, "BATTERY: %.2f         ", (glb::left_front.get_voltage() + glb::right_front.get_voltage() ) /2);
+            glb::con.print(1, 0, "BATTERY: %.2f         ", pros::battery::get_capacity());
         else
-            glb::con.print(1, 0, "INERTIAL: %.5f         ", glb::imu.get_pitch());
+            glb::con.print(1, 0, "FRONT (V): %.5f         ", (glb::left_front.get_voltage() + glb::right_front.get_voltage()) / 2);
     }
     if(time % 1000 == 0) glb::con.print(2, 0, "TEMP: %.1lf        ", mtr::get_temp(mtr::chas));
 }

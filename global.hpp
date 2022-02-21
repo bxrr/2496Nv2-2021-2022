@@ -68,7 +68,7 @@ namespace glb
     #define P_LEFT_MID_FRONT 1
     #define P_LEFT_MID_BACK 11
     #define P_LEFT_BACK 3
-    #define P_RIGHT_FRONT 7  // PTO right
+    #define P_RIGHT_FRONT 15  // PTO right
     #define P_RIGHT_MID_FRONT 9
     #define P_RIGHT_MID_BACK 19
     #define P_RIGHT_BACK 6
@@ -90,11 +90,12 @@ namespace glb
     pros::Motor right_mid_front(P_RIGHT_MID_FRONT, pros::E_MOTOR_GEARSET_06, true);
     pros::Motor right_mid_back(P_RIGHT_MID_BACK, pros::E_MOTOR_GEARSET_06, true);
     pros::Motor right_back(P_RIGHT_BACK, pros::E_MOTOR_GEARSET_06, true);
+
     // misc
     pros::Imu imu(P_IMU);
     pros::Controller con(pros::E_CONTROLLER_MASTER);
     // piston
-    obj::Piston PTO(P_PTO, false);
+    obj::Piston PTO(P_PTO, true);
     obj::Piston front_clamp(P_FRONT_CLAMP);
     obj::Piston lback_lift(P_LEFT_BACK_LIFT, true);
     obj::Piston rback_lift(P_RIGHT_BACK_LIFT, true);

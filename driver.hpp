@@ -19,6 +19,7 @@ void PTO_on() // access lift
     {
         glb::con.set_text(3, 0, "."); 
         mtr::set_brake(mtr::hold, mtr::front);
+        mtr::stop(mtr::front);
     }
 }
 
@@ -28,6 +29,7 @@ void PTO_off() // 8 motor drive
     {
         glb::con.set_text(3, 0, "..");
         mtr::set_brake(mtr::coast, mtr::front);
+        mtr::stop(mtr::front);
     }
 }
 
@@ -108,15 +110,14 @@ void arcade_drive(bool all_motors)
     }
     else
     {
-        if(abs(glb::imu.get_pitch()) > 6)
+        if(abs(glb::imu.get_roll()) > 6)
         {
-            mtr::spin(-glb::imu.get_pitch() * 1.5);
+            mtr::spin(-glb::imu.get_roll() * 1.5, mode);
         }
         else
         {
-            mtr::stop();
+            mtr::stop(mode);
         }
-        mtr::stop();
     }
 }
 
@@ -133,13 +134,13 @@ void tank_drive(bool all_motors)
     }
     else
     {
-        if(abs(glb::imu.get_pitch()) > 6)
+        if(abs(glb::imu.get_roll()) > 6)
         {
-            mtr::spin(-glb::imu.get_pitch() * 1.5);
+            mtr::spin(-glb::imu.get_roll() * 1.5, mode);
         }
         else
         {
-            mtr::stop();
+            mtr::stop(mode);
         }
     }
 }
@@ -228,7 +229,6 @@ void clamp_control()
 
 void print_info(int time) // lines: 0-2
 {
-    static bool print_battery = true;
     std::string eight_motor;
 
     if(glb::PTO.status())
@@ -236,17 +236,9 @@ void print_info(int time) // lines: 0-2
     else
         eight_motor = "true";
 
-    if(glb::con.get_digital(pros::E_CONTROLLER_DIGITAL_RIGHT)) print_battery = false;
-    if(glb::con.get_digital(pros::E_CONTROLLER_DIGITAL_LEFT)) print_battery = true;
     if(time % 400 == 0 && time % 500 != 0 && time % 1000 != 0) glb::con.print(0, 0, "8M DRIVE: %s           ", eight_motor);
-    if(time % 500 == 0 && time % 1000 != 0) 
-    {
-        if(print_battery)
-            glb::con.print(1, 0, "BATTERY: %.2f         ", pros::battery::get_capacity());
-        else
-            glb::con.print(1, 0, "FRONT (V): %.5f         ", (glb::left_front.get_voltage() + glb::right_front.get_voltage()) / 2);
-    }
+    if(time % 500 == 0 && time % 1000 != 0) glb::con.print(1, 0, "INERT: %f           ", glb::imu.get_heading());
     if(time % 1000 == 0) glb::con.print(2, 0, "TEMP: %.1lf        ", mtr::get_temp(mtr::chas));
 }
 
-#endif
+#endif 

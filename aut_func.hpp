@@ -10,6 +10,7 @@
 namespace fnc
 {
     #define AUTO_STRAIGHT_KP 3
+ 
     double global_heading = 0;
 
     void drive(double distance, int timeout=5000, double max_speed=112, double offset=700)
@@ -177,3 +178,4 @@ namespace fnc
 }
 
 #endif
+

@@ -87,7 +87,7 @@ fptr auton_selector(std::string &aut_name)
         {
             pros::delay(50);
             glb::con.print(0, 0, "Selected           ");
-            pros::delay(1500);
+            pros::delay(2000);
             aut_name = aut::auton_names.at(selected);
             return aut::auton_calls.at(selected);
         }
@@ -110,7 +110,7 @@ void arcade_drive(bool all_motors)
     }
     else
     {
-        if(abs(glb::imu.get_roll()) > 6)
+        if(abs(glb::imu.get_roll()) > 6 && imu.get_roll() < 25)
         {
             mtr::spin(-glb::imu.get_roll() * 1.5, mode);
         }
@@ -227,6 +227,20 @@ void clamp_control()
     else first_press = true;
 }
 
+void cover_control()
+{
+    static bool first_press = true;
+    if(glb::con.get_digital(pros::E_CONTROLLER_DIGITAL_L1) && glb::con.get_digital(pros::E_CONTROLLER_DIGITAL_R1))
+    {
+        if(first_press)
+        {
+            first_press = false;
+            goal_cover.toggle();
+        }
+    }
+    else first_press = true;
+}
+
 void print_info(int time) // lines: 0-2
 {
     std::string eight_motor;
@@ -237,7 +251,7 @@ void print_info(int time) // lines: 0-2
         eight_motor = "true";
 
     if(time % 400 == 0 && time % 500 != 0 && time % 1000 != 0) glb::con.print(0, 0, "8M DRIVE: %s           ", eight_motor);
-    if(time % 500 == 0 && time % 1000 != 0) glb::con.print(1, 0, "INERT: %f           ", glb::imu.get_heading());
+    if(time % 500 == 0 && time % 1000 != 0) glb::con.print(1, 0, "pow: %.2f           ", glb::left_front.get_power());
     if(time % 1000 == 0) glb::con.print(2, 0, "TEMP: %.1lf        ", mtr::get_temp(mtr::chas));
 }
 

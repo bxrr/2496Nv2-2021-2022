@@ -13,7 +13,7 @@ namespace fnc
  
     double global_heading = 0;
 
-    void drive(double distance, int timeout=5000, double max_speed=112, double offset=700)
+    void drive(double distance, int timeout=5000, double max_speed=120, double offset=750)
     {
         // variables
         glb::imu.set_heading(180);
@@ -154,6 +154,7 @@ namespace fnc
             pros::delay(1);
             time += 1;
         }
+        global_heading += glb::imu.get_heading() - start_heading;
     }
 
     void rotate_to(double degree_to, int timeout=5000, float multiplier=1.0)

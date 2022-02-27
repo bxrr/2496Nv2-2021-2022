@@ -48,7 +48,18 @@ void opcontrol()
 
     while(true)
     {
-        disabled = disable_all();
+        disabled = true;
+
+        if(time < 3000) 
+        {
+            imu.set_roll(0);
+            mtr::stop(all);
+            disabled = false;
+        }
+        else
+        {
+            disabled = disable_all();
+        }
 
         if(!disabled)
         {
@@ -58,6 +69,7 @@ void opcontrol()
             chainbar_control();
             twobar_control();
             clamp_control();
+            cover_control();
             print_info(time);
             
             if(glb::con.get_digital(pros::E_CONTROLLER_DIGITAL_DOWN)) autonomous();

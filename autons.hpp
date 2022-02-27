@@ -15,8 +15,8 @@ namespace aut
 {
     void test()
     {
-        drive(-1000);
         rotate_to(90);
+        rotate_to(-90);
     }
 
     void half_awp()
@@ -34,7 +34,7 @@ namespace aut
         spin_lift(200);
         delay(100);
         drive(-700);
-        rotate_to(135);
+        rotate(135);
         spin_lift(-200);
         delay(400);
         chain_clamp.toggle();
@@ -54,19 +54,18 @@ namespace aut
     {
         spin_dist(-200);
         toggle_2bar();
-        spin_dist(-1500);
+        spin_dist(-1400);
         toggle_2bar();
-        spin_dist(-150);
-        drive(750);
-        rotate_to(135);
+        goal_cover.toggle();
+        spin_dist(-100);
+        drive(500);
+        rotate(118);
         spin_dist(1200);
-        spin_lift(-100);
-        spin_dist(220, 60);
+        spin_dist(220, 80);
         chain_clamp.toggle();
-        spin_dist(30, 60);
+        spin_dist(30, 80);
         spin_lift(5000);
         drive(-400);
-        front_clamp.toggle();
         rotate_to(-45);
         drive(1500);
         spin_dist(50, 40);
@@ -95,10 +94,20 @@ namespace aut
     {
         spin_dist(-200);
         toggle_2bar();
-        spin_dist(-1400);
+        spin_dist(-1250);
         toggle_2bar();
-        spin_dist(-150);
-        drive(900);
+        spin_dist(-300);
+        rotate_to(-45);
+        drive(-200);
+        rotate_to(-90);
+        drive(-1400);
+        rotate_to(-45);
+        spin_dist(100);
+        chain_clamp.toggle();
+        spin_lift(6000);
+        drive(1000);
+
+
     }
 
     void back_tree()

@@ -78,6 +78,7 @@ namespace glb
     #define P_RIGHT_BACK_LIFT 'C'
     #define P_CHAIN_CLAMP 'E'
     #define P_FRONT_CLAMP 'G'
+    #define P_GOAL_COVER 'H'
     // misc
     #define P_IMU 12
 
@@ -100,6 +101,7 @@ namespace glb
     obj::Piston lback_lift(P_LEFT_BACK_LIFT, true);
     obj::Piston rback_lift(P_RIGHT_BACK_LIFT, true);
     obj::Piston chain_clamp(P_CHAIN_CLAMP, true);
+    obj::Piston goal_cover(P_GOAL_COVER, true);
 
     void init_pistons()
     {
@@ -108,6 +110,7 @@ namespace glb
         glb::chain_clamp.initialize();
         glb::lback_lift.initialize();
         glb::rback_lift.initialize();
+        glb::goal_cover.initialize();
     }
 }
 

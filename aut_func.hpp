@@ -9,7 +9,7 @@
 
 namespace fnc
 {
-    #define AUTO_STRAIGHT_KP 3
+    #define AUTO_STRAIGHT_KP 2
  
     double global_heading = 0;
 
@@ -125,7 +125,7 @@ namespace fnc
         {
             // calculate variables
             double error = target - glb::imu.get_heading();
-            double speed = (multiplier * 25) * log(0.25 * (abs(error) + 4)) + 8;
+            double speed = multiplier * (abs(error) >= 90 ? 30 * log(0.25 * abs(error)) + 5 : 30 * asin((abs(error) - 45) / 45) + 50);
             speed = error < 0 ? -speed : speed;
 
             // apply speeds
@@ -154,12 +154,15 @@ namespace fnc
             pros::delay(1);
             time += 1;
         }
+
         global_heading += glb::imu.get_heading() - start_heading;
     }
 
     void rotate_to(double degree_to, int timeout=5000, float multiplier=1.0)
     {
-        rotate(degree_to - global_heading, timeout, multiplier);
+        double degree = degree_to - global_heading;
+        if(degree > 180) degree = -(360 - degree);
+        rotate(degree, timeout, multiplier);
     }
 
     inline void spin_lift(double distance, double speed=600) // negative = up, positive = down
@@ -179,4 +182,3 @@ namespace fnc
 }
 
 #endif
-

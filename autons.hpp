@@ -17,6 +17,8 @@ namespace aut
     {
         rotate_to(90);
         rotate_to(-90);
+        rotate_to(135);
+        rotate_to(-135);
     }
 
     void half_awp()

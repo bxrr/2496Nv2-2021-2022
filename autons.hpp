@@ -39,8 +39,8 @@ namespace aut
         drive(-1000, 100, 2000);
         rotate_to(-130, 1800);
         spin_dist(800);
-        spin_dist(300, 90);
-        delay(200);
+        drive(300);
+        delay(100);
         front_clamp.toggle();
         delay(100);
         spin_dist(-1300);

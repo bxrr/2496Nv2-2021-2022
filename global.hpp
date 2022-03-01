@@ -97,7 +97,7 @@ namespace glb
     pros::Controller con(pros::E_CONTROLLER_MASTER);
     // piston
     obj::Piston PTO(P_PTO, true);
-    obj::Piston front_clamp(P_FRONT_CLAMP);
+    obj::Piston front_clamp(P_FRONT_CLAMP, true);
     obj::Piston lback_lift(P_LEFT_BACK_LIFT, true);
     obj::Piston rback_lift(P_RIGHT_BACK_LIFT, true);
     obj::Piston chain_clamp(P_CHAIN_CLAMP, true);

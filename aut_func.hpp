@@ -9,11 +9,11 @@
 
 namespace fnc
 {
-    #define AUTO_STRAIGHT_KP 2
+    #define AUTO_STRAIGHT_KP 3
  
     double global_heading = 0;
 
-    void drive(double distance, int timeout=5000, double max_speed=120, double offset=750)
+    void drive(double distance, double max_speed=120, int timeout=5000, double offset=750)
     {
         // variables
         glb::imu.set_heading(180);
@@ -22,7 +22,7 @@ namespace fnc
         double target = mtr::pos(mode) + distance;
 
         bool within_range = false;
-        double within_range_err = 5;
+        double within_range_err = 10;
         int within_range_exit = 300;
         int within_range_time;
 
@@ -105,7 +105,7 @@ namespace fnc
         global_heading += glb::imu.get_heading() - start_heading;
     }
    
-    void rotate(double degrees, int timeout=5000, float multiplier=1.0)
+    void rotate(double degrees, int timeout=3000, float multiplier=1.0)
     {
         // variables
         double start_heading = degrees > 0 ? 25 : 335;
@@ -114,7 +114,7 @@ namespace fnc
         mtr::Mode mode = glb::PTO.status() ? mtr::chas : mtr::all;
 
         bool within_range = false;
-        double within_range_err = 0.1;
+        double within_range_err = 0.35;
         int within_range_exit = 300;
         int within_range_time;
 
@@ -125,7 +125,7 @@ namespace fnc
         {
             // calculate variables
             double error = target - glb::imu.get_heading();
-            double speed = multiplier * (abs(error) >= 90 ? 30 * log(0.25 * abs(error)) + 5 : 30 * asin((abs(error) - 45) / 45) + 50);
+            double speed = multiplier * 25.5 * log(0.25 * (abs(error) + 4)) + 5;
             speed = error < 0 ? -speed : speed;
 
             // apply speeds

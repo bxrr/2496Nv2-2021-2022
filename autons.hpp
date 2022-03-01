@@ -15,10 +15,8 @@ namespace aut
 {
     void test()
     {
-        rotate_to(90);
-        rotate_to(-90);
-        rotate_to(135);
-        rotate_to(-135);
+        drive(1500);
+        drive(-1500);
     }
 
     void half_awp()
@@ -26,6 +24,28 @@ namespace aut
         drive(500);
         chain_clamp.toggle();
         drive(-1000);
+    }
+
+    void awp()
+    {
+        spin_dist(500, 50);
+        chain_clamp.toggle();
+        spin_lift(5000);
+        drive(-400, 1000);
+        rotate_to(-90, 1800);
+        drive(600, 120, 1300);
+        rotate_to(0, 1200);
+        drive(4000, 110, 3100, 1600);
+        front_clamp.toggle();
+        delay(200);
+        front_clamp.toggle();
+        drive(-1000, 100, 2000);
+        rotate_to(-130, 1800);
+        spin_dist(800);
+        spin_dist(200, 90);
+        front_clamp.toggle();
+        delay(100);
+        spin_dist(-1300);
     }
 
     void elev() // start forward; half awp + alliance goal -> middle goal -> neutral goal
@@ -54,24 +74,15 @@ namespace aut
 
     void elev_neu() // start backward; neutral goal -> middle goal -> alliance goal
     {
-        spin_dist(-200);
+        spin_dist(-250);
         toggle_2bar();
-        spin_dist(-1400);
+        spin_dist(-1350);
         toggle_2bar();
         goal_cover.toggle();
-        spin_dist(-100);
+        //delay(75);
+        spin_dist(100, 80);
         drive(500);
-        rotate(118);
-        spin_dist(1200);
-        spin_dist(220, 80);
-        chain_clamp.toggle();
-        spin_dist(30, 80);
-        spin_lift(5000);
-        drive(-400);
-        rotate_to(-45);
-        drive(1500);
-        spin_dist(50, 40);
-        front_clamp.toggle();
+        rotate_to(125);
     }
 
     void elev_tree() // start backward; middle goal -> neutral goal -> alliance goal
@@ -153,8 +164,8 @@ namespace aut
     }
 
     // callable list of autons
-    std::vector<void (*)()>  auton_calls{ test,   half_awp,   elev,   elev_neu,   back_neu,   back_tree,   rush_neu,   rush_neu2,   rush_tree };
-    std::vector<std::string> auton_names{"test", "half_awp", "elev", "elev_neu", "back_neu", "back_tree", "rush_neu", "rush_neu2", "rush_tree"};
+    std::vector<void (*)()>  auton_calls{ test,   half_awp,   awp,  elev,   elev_neu,   back_neu,   back_tree,   rush_neu,   rush_neu2,   rush_tree };
+    std::vector<std::string> auton_names{"test", "half_awp", "awp", "elev", "elev_neu", "back_neu", "back_tree", "rush_neu", "rush_neu2", "rush_tree"};
 }
 
 

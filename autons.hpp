@@ -32,19 +32,23 @@ namespace aut
         drive(600, 120, 1300);
         rotate_to(0, 1200);
         drive(4000, 120, 2200, 2000);
-        drive(-1000, 120, 1300);
-        rotate_to(-130, 1300);
-        spin_dist(900);
-        spin_dist(375, 70); 
         front_clamp.toggle();
+        rotate_to(30, 1000);
+        toggle_2bar();
+        spin_dist(-1900);
+        spin_dist(375, 70); 
+        toggle_2bar();
+        goal_cover.toggle();
         spin_dist(40, 70);
-        drive(-1550);
+        drive(2100);
+        rotate_to(0);
+        spin_dist(-2000);
     }
 
     void awp_elev() // start forward; half awp -> middle goal 
     {
         drive(550, 120, 1500);
-        drive(-550, 120 1500);
+        drive(-550, 120, 1500);
         rotate(-45, 1500);
         spin_dist(2200, 90);
         spin_dist(300, 60);

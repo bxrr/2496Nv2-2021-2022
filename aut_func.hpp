@@ -77,7 +77,7 @@ namespace fnc
         global_heading += glb::imu.get_heading() - start_heading;
     }
 
-    void spin_dist(double distance, double speed=127, int timeout=5000)
+    void spin_dist(double distance, double speed=124.5, int timeout=5000)
     {
         // variables
         glb::imu.set_heading(180);

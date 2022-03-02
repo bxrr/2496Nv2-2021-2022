@@ -31,55 +31,72 @@ namespace aut
         rotate_to(-90, 1800, 1.1);
         drive(600, 120, 1300);
         rotate_to(0, 1200);
-        drive(4000, 110, 3100, 1600);
-        drive(-1000, 100, 2000);
-        rotate_to(-130, 1800);
-        spin_dist(800);
-        spin_dist(350, 70); // drive(300);
+        drive(4000, 120, 2200, 2000);
+        drive(-1000, 120, 1300);
+        rotate_to(-130, 1300);
+        spin_dist(900);
+        spin_dist(375, 70); 
         front_clamp.toggle();
         spin_dist(40, 70);
-        drive(-1300);
+        drive(-1550);
     }
 
-    void awp_elev() // start forward; half awp + alliance goal -> middle goal -> neutral goal
+    void awp_elev() // start forward; half awp -> middle goal 
     {
-        spin_dist(600, 50);
+        drive(550, 120, 1500);
+        drive(-550, 120 1500);
+        rotate(-45, 1500);
+        spin_dist(2200, 90);
+        spin_dist(300, 60);
         chain_clamp.toggle();
+        spin_dist(40, 50);
         spin_lift(5000);
-        rotate_to(-45);
-        spin_dist(1800);
-        spin_dist(600, 70);
-        front_clamp.toggle();
-        spin_dist(70, 70);
-        drive(-600);
-        toggle_2bar();
-        rotate_to(-135);
-        drive(700);
-        toggle_2bar();
-        goal_cover.toggle();
-        spin_dist(50, 60);
-        drive(-1000);
+        drive(-2100, 80);
+        rotate(60, false);
     }
 
-    void elev_neu() // start backward; neutral goal -> middle goal -> alliance goal
+    void elev_neu()
     {
-        spin_dist(-250);
-        toggle_2bar();
-        spin_dist(-1350);
-        toggle_2bar();
-        spin_dist(-70, 80);
-        goal_cover.toggle();
-        drive(400);
-        rotate_to(135);
-        spin_dist(1000);
+        spin_dist(1300);
+        spin_dist(300, 70);
         chain_clamp.toggle();
-        drive(-1000);
+        spin_dist(50, 50);
+        spin_lift(5000);
+        drive(-400);
+        rotate_to(-60, 1500);
+        spin_dist(1120);
+        spin_dist(300, 70);
+        front_clamp.toggle();
+        spin_dist(50, 50);
+        toggle_2bar();
+        drive(-2100, 70);
+    }
+
+    void back_neu() // start backward; neutral goal -> middle goal -> alliance goal
+    {
+        spin_lift(2500);
+        spin_dist(-200);
+        toggle_2bar();
+        spin_dist(-1300);
+        spin_dist(-250, 73);
+        toggle_2bar();
+        goal_cover.toggle();
+        spin_dist(-50, 50);
+        spin_lift(-2500);
+        drive(500, 900);
+        rotate_to(115, 1800);
+        spin_dist(1000);
+        spin_dist(400, 70);
+        chain_clamp.toggle();
+        spin_dist(50, 50);
+        spin_lift(5000);
+        drive(-2000);
         rotate_to(-90);
-        drive(700);
+        spin_dist(250, 60);
         front_clamp.toggle();
     }
 
-    void elev_tree() // start backward; middle goal -> neutral goal -> alliance goal
+    void back_tree() // start backward; middle goal -> neutral goal -> alliance goal
     {
         spin_dist(-200);
         toggle_2bar();
@@ -130,8 +147,8 @@ namespace aut
 
 
     // callable list of autons
-    std::vector<void (*)()>  auton_calls{ half_awp,   solo_awp,   awp_elev,   elev_neu,   elev_tree,   rush_elev,   rush_de_elev,   rush_tree };
-    std::vector<std::string> auton_names{"half_awp", "solo_awp", "awp_elev", "elev_neu", "elev_tree", "rush_de_elev", "rush_de_elev", "rush_tree"};
+    std::vector<void (*)()>  auton_calls{ half_awp,   solo_awp,   awp_elev,   elev_neu,   back_neu,   back_tree,   rush_elev,   rush_de_elev,   rush_tree };
+    std::vector<std::string> auton_names{"half_awp", "solo_awp", "awp_elev", "elev_neu", "back_neu", "back_tree", "rush_de_elev", "rush_de_elev", "rush_tree"};
 }
 
 

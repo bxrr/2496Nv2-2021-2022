@@ -29,20 +29,37 @@ namespace aut
         spin_lift(5000);
         drive(-400, 1000);
         rotate_to(-90, 1800, 1.1);
-        drive(600, 120, 1300);
+        drive(650, 120, 1300);
         rotate_to(0, 1200);
-        drive(4000, 120, 2200, 2000);
+        drive(4000, 120, 2400, 2000);
         front_clamp.toggle();
         rotate_to(30, 1000);
         toggle_2bar();
         spin_dist(-1900);
-        spin_dist(375, 70); 
+        spin_dist(-350, 70); 
         toggle_2bar();
         goal_cover.toggle();
-        spin_dist(40, 70);
-        drive(2100);
-        rotate_to(0);
-        spin_dist(-2000);
+        spin_dist(-40, 70);
+        drive(1900);
+
+        /*
+        spin_dist(500, 50);
+        chain_clamp.toggle();
+        spin_lift(5000);
+        drive(-400, 1000);
+        rotate_to(-90, 1800);
+        drive(600, 120, 1300);
+        rotate_to(0, 1200);
+        drive(4000, 110, 3100, 1600);
+        drive(-1000, 100, 2000);
+        rotate_to(-130, 1800);
+        spin_dist(800);
+        drive(300);
+        delay(100);
+        front_clamp.toggle();
+        delay(100);
+        spin_dist(-1300);
+        */
     }
 
     void awp_elev() // start forward; half awp -> middle goal 
@@ -61,19 +78,21 @@ namespace aut
 
     void elev_neu()
     {
-        spin_dist(1300);
-        spin_dist(300, 70);
+        spin_dist(1430);
         chain_clamp.toggle();
         spin_dist(50, 50);
         spin_lift(5000);
-        drive(-400);
-        rotate_to(-60, 1500);
-        spin_dist(1120);
-        spin_dist(300, 70);
+        drive(-1080);
+        rotate_to(-40, 1600);
+        spin_dist(1200);
+        spin_dist(200, 70);
         front_clamp.toggle();
-        spin_dist(50, 50);
+        spin_dist(100);
+        delay(50);
+        drive(-1500);
         toggle_2bar();
-        drive(-2100, 70);
+        rotate_to(-85, 1700);
+        drive(-500);
     }
 
     void back_neu() // start backward; neutral goal -> middle goal -> alliance goal

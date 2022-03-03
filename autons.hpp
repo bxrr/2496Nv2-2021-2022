@@ -28,25 +28,6 @@ namespace aut
         chain_clamp.toggle();
         spin_lift(5000);
         drive(-400, 1000);
-        rotate_to(-90, 1800, 1.1);
-        drive(650, 120, 1300);
-        rotate_to(0, 1200);
-        drive(4000, 120, 2400, 2000);
-        front_clamp.toggle();
-        rotate_to(30, 1000);
-        toggle_2bar();
-        spin_dist(-1900);
-        spin_dist(-350, 70); 
-        toggle_2bar();
-        goal_cover.toggle();
-        spin_dist(-40, 70);
-        drive(1900);
-
-        /*
-        spin_dist(500, 50);
-        chain_clamp.toggle();
-        spin_lift(5000);
-        drive(-400, 1000);
         rotate_to(-90, 1800);
         drive(600, 120, 1300);
         rotate_to(0, 1200);
@@ -59,7 +40,6 @@ namespace aut
         front_clamp.toggle();
         delay(100);
         spin_dist(-1300);
-        */
     }
 
     void awp_elev() // start forward; half awp -> middle goal 

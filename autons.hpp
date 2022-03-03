@@ -27,18 +27,17 @@ namespace aut
         spin_dist(500, 50);
         chain_clamp.toggle();
         spin_lift(5000);
-        drive(-400, 1000);
+        drive(-380, 1000);
         rotate_to(-90, 1800);
-        drive(600, 120, 1300);
-        rotate_to(0, 1200);
-        drive(4000, 110, 3100, 1600);
-        drive(-1000, 100, 2000);
+        drive(500, 120, 1300);
+        rotate_to(-2, 1500);
+        drive(3700, 110, 3100, 1600);
+        spin_dist(300, 100, 300);
+        drive(-850, 100, 2000);
         rotate_to(-130, 1800);
-        spin_dist(800);
-        drive(300);
-        delay(100);
+        spin_dist(1400);
         front_clamp.toggle();
-        delay(100);
+        spin_dist(100);
         spin_dist(-1300);
     }
 

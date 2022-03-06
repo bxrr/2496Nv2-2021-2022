@@ -13,13 +13,10 @@ using namespace glb;
 
 namespace aut
 {
-    void half_awp()
+    void test()
     {
-        spin_dist(500, 50);
-        chain_clamp.toggle();
-        spin_lift(5000);
-        drive(-500);
-        rotate(45);
+        drive(1000);
+        drive(-1000);
     }
 
     void solo_awp()
@@ -28,17 +25,21 @@ namespace aut
         chain_clamp.toggle();
         spin_lift(5000);
         drive(-380, 1000);
-        rotate_to(-90, 1800);
+        rotate_to(-90, 1800, 1.1);
         drive(500, 120, 1300);
-        rotate_to(-2, 1500);
-        drive(3700, 110, 3100, 1600);
-        spin_dist(300, 100, 300);
-        drive(-850, 100, 2000);
-        rotate_to(-130, 1800);
-        spin_dist(1400);
+        rotate_to(-1.5, 1800, 1.05);
+        drive(3800, 120, 2700, 1000);
         front_clamp.toggle();
-        spin_dist(100);
-        spin_dist(-1300);
+        toggle_2bar();
+        rotate_to(33, 1800, 1.2);
+        spin_dist(-1700);
+        toggle_2bar();
+        goal_cover.toggle();
+        spin_dist(-100);
+        rotate_to(-40, 1800, 1.4);
+        spin_dist(-1900);
+        front_clamp.toggle();
+        drive(-400);
     }
 
     void awp_elev() // start forward; half awp -> middle goal 
@@ -149,8 +150,8 @@ namespace aut
 
 
     // callable list of autons
-    std::vector<void (*)()>  auton_calls{ half_awp,   solo_awp,   awp_elev,   elev_neu,   back_neu,   back_tree,   rush_elev,   rush_de_elev,   rush_tree };
-    std::vector<std::string> auton_names{"half_awp", "solo_awp", "awp_elev", "elev_neu", "back_neu", "back_tree", "rush_de_elev", "rush_de_elev", "rush_tree"};
+    std::vector<void (*)()>  auton_calls{ test,   solo_awp,   awp_elev,   elev_neu,   back_neu,   back_tree,   rush_elev,   rush_de_elev,   rush_tree };
+    std::vector<std::string> auton_names{"test", "solo_awp", "awp_elev", "elev_neu", "back_neu", "back_tree", "rush_de_elev", "rush_de_elev", "rush_tree"};
 }
 
 

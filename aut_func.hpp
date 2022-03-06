@@ -16,14 +16,22 @@ namespace fnc
     void drive(double distance, double max_speed=120, int timeout=5000, double offset=750)
     {
         // variables
+        #define DRIVE_KP 0.5
+        #define DRIVE_KI 0.0
+        #define DRIVE_KD 0.0
+
+        mtr::Mode mode = glb::PTO.status() ? mtr::chas : mtr::all;
         glb::imu.set_heading(180);
         double start_heading = glb::imu.get_heading();
-        mtr::Mode mode = glb::PTO.status() ? mtr::chas : mtr::all;
-        double target = mtr::pos(mode) + distance;
+        
+        double target = mtr::pos() + distance;
+        double error = target - mtr::pos();
+        double integral = 0;
+        double last_error;
 
         bool within_range = false;
-        double within_range_err = 10;
-        int within_range_exit = 300;
+        double within_range_err = 1;
+        int within_range_exit = 50;
         int within_range_time;
 
         int time = 0;
@@ -31,28 +39,23 @@ namespace fnc
         while(time < timeout)
         {
             // update variables
-            double current = mtr::pos(mode);
-            double error = target - current; 
-            double speed;
+            last_error = error;
+            error = target - mtr::pos();
+            integral += (abs(error) * DRIVE_KP < max_speed) * error; // if P is less than the max speed, start adding to the integral
+            double derivative = error - last_error;
 
-            // calculate speeds
-            if(abs(error) >= offset)
-                speed = max_speed;
-            else if(abs(error) >= 75 && abs(error) < offset)
-                speed = max_speed * sin((PI * abs(error)) / (2 * offset));
-            else
-                speed = 90 / offset * abs(error) + 8;
-            
-            speed = error < 0 ? -speed : speed;
-            double auto_straight = (start_heading - glb::imu.get_heading()) * AUTO_STRAIGHT_KP;
+            // speed variables
+            double base_speed = error * DRIVE_KP + integral * DRIVE_KI + derivative * DRIVE_KD;
+            double correction_speed = (start_heading - glb::imu.get_heading()) * AUTO_STRAIGHT_KP;
             
             // apply speeds
-            mtr::spin_left(speed + auto_straight, mode);
-            mtr::spin_right(speed - auto_straight, mode);
+            if(abs(base_speed) > max_speed) base_speed = base_speed > 0 ? max_speed : -max_speed;
+            mtr::spin_left(base_speed + correction_speed, mode);
+            mtr::spin_right(base_speed - correction_speed, mode);
 
             // print error
-            if(time % 50 == 0) glb::con.print(0, 0, "err: %f      ", error);
-            
+            if(time % 50 == 0) { glb::con.print(0, 0, "Err: %lf        ", error); }
+
             // check for exit
             if(abs(error) <= within_range_err)
             {
@@ -69,8 +72,8 @@ namespace fnc
             else within_range = false;
 
             // increment time
-            pros::delay(1);
-            time += 1;
+            pros::delay(5);
+            time += 5;
         }
         // stop motors once out of loop
         mtr::stop(mode);
@@ -107,15 +110,23 @@ namespace fnc
    
     void rotate(double degrees, int timeout=3000, float multiplier=1.0)
     {
+        #define ROTATE_KP 1.0
+        #define ROTATE_KI 0.0
+        #define ROTATE_KD 0.0
+
         // variables
+        mtr::Mode mode = glb::PTO.status() ? mtr::chas : mtr::all;
         double start_heading = degrees > 0 ? 25 : 335;
         glb::imu.set_heading(start_heading);
+
         double target = glb::imu.get_heading() + degrees;
-        mtr::Mode mode = glb::PTO.status() ? mtr::chas : mtr::all;
+        double error = target - glb::imu.get_heading();
+        double integral = 0;
+        double last_error;
 
         bool within_range = false;
-        double within_range_err = 0.35;
-        int within_range_exit = 300;
+        double within_range_err = 0.05;
+        int within_range_exit = 50;
         int within_range_time;
 
         int time = 0;
@@ -123,17 +134,21 @@ namespace fnc
         // control loop
         while(time < timeout)
         {
-            // calculate variables
-            double error = target - glb::imu.get_heading();
-            double speed = multiplier * 25.5 * log(0.25 * (abs(error) + 4)) + 5;
-            speed = error < 0 ? -speed : speed;
+            // update variables
+            last_error = error;
+            error = target - glb::imu.get_heading();
+            integral += error;
+            double derivative = error - last_error;
 
+            // speed variables
+            double speed = multiplier * (error * DRIVE_KP + integral * DRIVE_KI + derivative * DRIVE_KD);
+            
             // apply speeds
             mtr::spin_left(speed, mode);
-            mtr::spin_right(-speed, mode);
+            mtr::spin_right(speed, mode);
 
             // print error
-            if(time % 50 == 0) glb::con.print(0, 0, "err: %f      ", error);
+            if(time % 50 == 0) { glb::con.print(0, 0, "Err: %lf        ", error); }
 
             // check for exit
             if(abs(error) <= within_range_err)
@@ -151,10 +166,11 @@ namespace fnc
             else within_range = false;
 
             // increment time
-            pros::delay(1);
-            time += 1;
+            pros::delay(5);
+            time += 5;
         }
-
+        // stop robot after loop
+        mtr::stop(mode);
         global_heading += glb::imu.get_heading() - start_heading;
     }
 

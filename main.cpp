@@ -48,19 +48,7 @@ void opcontrol()
 
     while(true)
     {
-        disabled = true;
-
-        if(time < 3000) 
-        {
-            imu.set_roll(0);
-            mtr::stop(all);
-            disabled = false;
-        }
-        else
-        {
-            disabled = disable_all();
-        }
-
+        disabled = disable_all();
         if(!disabled)
         {
             // driver.hpp control functions

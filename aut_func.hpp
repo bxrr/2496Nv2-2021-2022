@@ -11,7 +11,7 @@ using namespace okapi;
 namespace fnc
 {
     auto SixChas = ChassisControllerBuilder()
-        .withMotors({-P_LEFT_MID_FRONT, -P_LEFT_MID_BACK, -P_LEFT_BACK}, // left
+        .withMotors({P_LEFT_MID_FRONT, P_LEFT_MID_BACK, P_LEFT_BACK}, // left
             {P_RIGHT_MID_FRONT, P_RIGHT_MID_BACK, P_RIGHT_BACK}) // right)
         .withDimensions(
             AbstractMotor::gearset::blue,

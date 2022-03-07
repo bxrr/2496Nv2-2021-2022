@@ -10,39 +10,6 @@ using namespace okapi;
 
 namespace fnc
 {
-    auto SixChas = ChassisControllerBuilder()
-        .withMotors({P_LEFT_MID_FRONT, P_LEFT_MID_BACK, P_LEFT_BACK}, // left
-            {P_RIGHT_MID_FRONT, P_RIGHT_MID_BACK, P_RIGHT_BACK}) // right)
-        .withDimensions(
-            AbstractMotor::gearset::blue,
-            {{2.75_in, 14.5_in}, imev5BlueTPR})
-        .build();
-    
-    auto EightChas = ChassisControllerBuilder()
-        .withMotors({P_LEFT_FRONT, -P_LEFT_MID_FRONT, -P_LEFT_MID_BACK, -P_LEFT_BACK}, // left
-            {-P_RIGHT_FRONT, P_RIGHT_MID_FRONT, P_RIGHT_MID_BACK, P_RIGHT_BACK}) // right)
-        .withDimensions(
-            AbstractMotor::gearset::blue,
-            {{2.75_in, 11.75_in}, imev5BlueTPR})
-        .build();
-
-    auto SixProfiler = AsyncMotionProfileControllerBuilder()
-        .withLimits({
-            2.1, // Max linear velocity (m/s)
-            4.2, // Max linear acceleration (m/s/s)
-            10.0}) // Max linear jerk (m/s/s/s)
-        .withOutput(SixChas)
-        .buildMotionProfileController();
-
-    auto EightProfiler = AsyncMotionProfileControllerBuilder()
-        .withLimits({
-            2.1, // Max linear velocity (m/s)
-            4.2, // Max linear acceleration (m/s/s)
-            10.0}) // Max linear jerk (m/s/s/s)
-        .withOutput(EightChas)
-        .buildMotionProfileController();
-
-
     #define AUTO_STRAIGHT_KP 3
 
     double global_heading = 0;

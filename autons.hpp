@@ -15,16 +15,6 @@ namespace aut
 {
     void test()
     {
-        SixProfiler->generatePath({{0_ft, 0_ft, 0_deg}, {5_ft, 0_ft, 0_deg}}, "A");
-        SixProfiler->setTarget("A");
-        SixProfiler->waitUntilSettled();
-        SixProfiler->generatePath({{0_ft, 0_ft, 0_deg}, {5_ft, 3_ft, 60_deg}}, "B");
-        SixProfiler->setTarget("B", false, true);
-        SixProfiler->waitUntilSettled();
-    }
-
-    void test2()
-    {
         drive(1200);
         rotate_to(90);
         rotate_to(0);
@@ -162,8 +152,8 @@ namespace aut
 
 
     // callable list of autons
-    std::vector<void (*)()>  auton_calls{ test,   test2,  solo_awp,   awp_elev,   elev_neu,   back_neu,   back_tree,   rush_elev,   rush_de_elev,   rush_tree };
-    std::vector<std::string> auton_names{"test", "test2" "solo_awp", "awp_elev", "elev_neu", "back_neu", "back_tree", "rush_de_elev", "rush_de_elev", "rush_tree"};
+    std::vector<void (*)()>  auton_calls{ test,   solo_awp,   awp_elev,   elev_neu,   back_neu,   back_tree,   rush_elev,   rush_de_elev,   rush_tree };
+    std::vector<std::string> auton_names{"test", "solo_awp", "awp_elev", "elev_neu", "back_neu", "back_tree", "rush_de_elev", "rush_de_elev", "rush_tree"};
 }
 
 

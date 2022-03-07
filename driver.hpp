@@ -10,8 +10,6 @@ using namespace glb;
 using namespace mtr;
 
 
- 
-typedef void(*fptr)(); // function pointer declaration
 
 void PTO_on() // access lift
 {

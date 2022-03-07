@@ -15,8 +15,11 @@ namespace aut
 {
     void test()
     {
-        drive(1000);
-        drive(-1000);
+        SixProfiler->generatePath({{0_ft, 0_ft, 0_deg}, {5.3_ft, 0_ft, 0_deg}}, "A");
+        SixProfiler->setTarget("A");
+        SixProfiler->waitUntilSettled();
+        SixProfiler->moveTo({{5.8_ft, -1.5_ft, 45_deg}, {6.3_ft, -3_ft, -90_deg}});
+        SixProfiler->waitUntilSettled();
     }
 
     void solo_awp()

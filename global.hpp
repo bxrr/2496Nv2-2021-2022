@@ -5,6 +5,8 @@
 #include <string.h>
 
 
+typedef void(*fptr)(); // function pointer declaration
+
 // additional class definitions ================================================================
 namespace obj
 {

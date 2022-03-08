@@ -6,20 +6,19 @@
 #include <string.h>
 #include <math.h>
 
-using namespace okapi;
 
 namespace fnc
 {
-    #define AUTO_STRAIGHT_KP 3
+    #define AUTO_STRAIGHT_KP 4
 
     double global_heading = 0;
 
     void drive(double distance, double max_speed=120, int timeout=5000, double offset=750)
     {
         // variables
-        #define DRIVE_KP 0.5
-        #define DRIVE_KI 0.0
-        #define DRIVE_KD 0.0
+        #define DRIVE_KP 0.47
+        #define DRIVE_KI 0.001
+        #define DRIVE_KD 9
 
         mtr::Mode mode = glb::PTO.status() ? mtr::chas : mtr::all;
         glb::imu.set_heading(180);
@@ -31,7 +30,7 @@ namespace fnc
         double last_error;
 
         bool within_range = false;
-        double within_range_err = 1;
+        double within_range_err = 5.0;
         int within_range_exit = 50;
         int within_range_time;
 
@@ -111,9 +110,9 @@ namespace fnc
    
     void rotate(double degrees, int timeout=3000, float multiplier=1.0)
     {
-        #define ROTATE_KP 1.0
-        #define ROTATE_KI 0.0
-        #define ROTATE_KD 0.0
+        #define ROTATE_KP 1.3
+        #define ROTATE_KI 0.0004
+        #define ROTATE_KD 10
 
         // variables
         mtr::Mode mode = glb::PTO.status() ? mtr::chas : mtr::all;
@@ -138,15 +137,15 @@ namespace fnc
             // update variables
             last_error = error;
             error = target - glb::imu.get_heading();
-            integral += error;
+            if(abs(error) < 90) integral += error;
             double derivative = error - last_error;
 
             // speed variables
-            double speed = multiplier * (error * DRIVE_KP + integral * DRIVE_KI + derivative * DRIVE_KD);
+            double speed = multiplier * (error * ROTATE_KP + integral * ROTATE_KI + derivative * ROTATE_KD);
             
             // apply speeds
             mtr::spin_left(speed, mode);
-            mtr::spin_right(speed, mode);
+            mtr::spin_right(-speed, mode);
 
             // print error
             if(time % 50 == 0) { glb::con.print(0, 0, "Err: %lf        ", error); }

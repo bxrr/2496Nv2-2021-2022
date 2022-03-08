@@ -103,10 +103,14 @@ void arcade_drive(bool all_motors)
     double left = abs(con.get_analog(pros::E_CONTROLLER_ANALOG_LEFT_Y)) > 10 ? con.get_analog(pros::E_CONTROLLER_ANALOG_LEFT_Y) : 0;
     double right = abs(glb::con.get_analog(pros::E_CONTROLLER_ANALOG_RIGHT_X)) > 10 ? glb::con.get_analog(pros::E_CONTROLLER_ANALOG_RIGHT_X) : 0;
 
-    mtr::spin_left(left + right, mode);
-    mtr::spin_right(left - right, mode);
+    if(left || right)
+    {
 
-    if(left == 0 && right == 0)
+        mtr::spin_left(left + right, mode);
+        mtr::spin_right(left - right, mode);
+    }
+
+    else
     {
         if(abs(glb::imu.get_roll()) > 6 && imu.get_roll() < 25)
         {

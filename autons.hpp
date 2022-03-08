@@ -15,10 +15,7 @@ namespace aut
 {
     void test()
     {
-        drive(1200);
-        rotate_to(90);
-        rotate_to(0);
-        drive(-1200);
+        rotate(90);
     }
 
     void solo_awp()
@@ -122,22 +119,24 @@ namespace aut
 
     void rush_elev()
     {
-        spin_dist(1400, 127, 2000);
-        spin_dist(100, 80, 200);
+        spin_dist(1430);
         chain_clamp.toggle();
-        spin_dist(40, 127, 100);
+        spin_dist(50, 50);
         spin_lift(5000);
-        spin_dist(-700);
+        drive(-1400);
     }
 
     void rush_de_elev()
     {
-        spin_dist(1600, 127, 2000);
-        spin_dist(100, 80, 200);
-        chain_clamp.toggle();
-        spin_dist(40, 127, 100);
-        spin_lift(5000);
-        spin_dist(-800);
+        spin_lift(3000);
+        toggle_2bar();
+        spin_dist(1600);
+        toggle_2bar();
+        goal_cover.toggle();
+        spin_dist(50, 50);
+        rotate_to(180);
+        spin_lift(-3000);
+        drive(-900);
     }
 
     void rush_tree() // elev side

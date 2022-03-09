@@ -102,8 +102,8 @@ namespace aut
         rotate_to(90);
         spin_lift(-2500);
         drive(750);
-        rotate_to(135);
-        drive(200);
+        rotate_to(120);
+        drive(250);
         chain_clamp.toggle();
         
 

@@ -91,16 +91,18 @@ namespace aut
     void back_neu() // start backward; neutral goal -> middle goal -> alliance goal
     {
         spin_lift(2500);
-        spin_dist(-400, 124.5, 2000);
+        spin_dist(-550, 124.5, 2000);
         toggle_2bar();
-        spin_dist(-1200, 124.5, 2500);
-        toggle_2bar();
+        spin_dist(-900, 124.5, 2500);
         goal_cover.toggle();
         delay(200);
-        drive(400);
+        toggle_2bar();
+        delay(200);
+        drive(600);
         rotate_to(90);
+        spin_lift(-2500);
         drive(400);
-        rotate_to(-135);
+        rotate_to(115);
         drive(200);
         chain_clamp.toggle();
         

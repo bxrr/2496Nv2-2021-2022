@@ -112,9 +112,9 @@ void arcade_drive(bool all_motors)
 
     else
     {
-        if(abs(glb::imu.get_roll()) > 6 && imu.get_roll() < 25)
+        if(abs(glb::imu.get_roll()) > 6 && imu.get_pitch() < 25)
         {
-            mtr::spin(-glb::imu.get_roll() * 1.5, mode);
+            mtr::spin(-glb::imu.get_pitch() * 1.5, mode);
         }
         else
         {

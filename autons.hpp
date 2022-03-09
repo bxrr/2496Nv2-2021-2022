@@ -20,14 +20,27 @@ namespace aut
 
     void solo_awp()
     {
+        /*
+        spin_dist(500, 50);
+        chain_clamp.toggle();
+        spin_lift(5000);
+        drive(-380, 100, 2000);
+        rotate_to(-90, 1900, 1.1);
+        drive(500, 120);
+        rotate_to(-1.5);
+        spin_dist(3800);
+        */
+
+    
         spin_dist(500, 50);
         chain_clamp.toggle();
         spin_lift(5000);
         drive(-380, 1000);
-        rotate_to(-90, 1800, 1.1);
+        rotate_to(-90, 1500, 1.1);
         drive(500, 120, 1300);
         rotate_to(-1.5, 1800, 1.05);
-        drive(3800, 120, 2700, 1000);
+        spin_dist(3000, 125, 4000);
+        spin_dist(600, 80, 1000);
         front_clamp.toggle();
         toggle_2bar();
         rotate_to(33, 1800, 1.2);
@@ -37,11 +50,12 @@ namespace aut
         spin_dist(-100);
         rotate_to(-40, 1800, 1.4);
         spin_dist(-1900);
-        front_clamp.toggle();
-        drive(-400);
+        // front_clamp.toggle();
+        // drive(-400);
+        
     }
 
-    void awp_elev() // start forward; half awp -> middle goal 
+    void awp_elev() // start forward; half awp -> middle goal TODO
     {
         drive(550, 120, 1500);
         drive(-550, 120, 1500);
@@ -77,6 +91,22 @@ namespace aut
     void back_neu() // start backward; neutral goal -> middle goal -> alliance goal
     {
         spin_lift(2500);
+        spin_dist(-400, 124.5, 2000);
+        toggle_2bar();
+        spin_dist(-1200, 124.5, 2500);
+        toggle_2bar();
+        goal_cover.toggle();
+        delay(200);
+        drive(400);
+        rotate_to(90);
+        drive(400);
+        rotate_to(-135);
+        drive(200);
+        chain_clamp.toggle();
+        
+
+        /*
+        spin_lift(2500);
         spin_dist(-200);
         toggle_2bar();
         spin_dist(-1300);
@@ -96,6 +126,7 @@ namespace aut
         rotate_to(-90);
         spin_dist(250, 60);
         front_clamp.toggle();
+        */
     }
 
     void back_tree() // start backward; middle goal -> neutral goal -> alliance goal
@@ -128,15 +159,26 @@ namespace aut
 
     void rush_de_elev()
     {
-        spin_lift(3000);
+        spin_lift(2500);
+        spin_dist(-800, 124.5, 2000);
         toggle_2bar();
-        spin_dist(1600);
+        spin_dist(-1400, 124.5, 2500);
         toggle_2bar();
         goal_cover.toggle();
-        spin_dist(50, 50);
-        rotate_to(180);
-        spin_lift(-3000);
-        drive(-900);
+        drive(60, 100, 100);
+        rotate_to(40, 1300);
+        drive(400, 120, 1500);
+        rotate_to(-17, 1000);
+        drive(2100, 100, 4000);
+        rotate_to(-108, 1500);
+        drive(400, 120, 1500);
+        front_clamp.toggle();
+        delay(300);
+        drive(-200, 100, 500);
+        front_clamp.toggle();
+        delay(100);
+        drive(-100);
+
     }
 
     void rush_tree() // elev side
@@ -152,7 +194,7 @@ namespace aut
 
     // callable list of autons
     std::vector<void (*)()>  auton_calls{ test,   solo_awp,   awp_elev,   elev_neu,   back_neu,   back_tree,   rush_elev,   rush_de_elev,   rush_tree };
-    std::vector<std::string> auton_names{"test", "solo_awp", "awp_elev", "elev_neu", "back_neu", "back_tree", "rush_de_elev", "rush_de_elev", "rush_tree"};
+    std::vector<std::string> auton_names{"test", "solo_awp", "awp_elev", "elev_neu", "back_neu", "back_tree", "rush_elev", "rush_de_elev", "rush_tree"};
 }
 
 

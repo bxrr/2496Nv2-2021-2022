@@ -61,6 +61,7 @@ void opcontrol()
             print_info(time);
             
             if(glb::con.get_digital(pros::E_CONTROLLER_DIGITAL_DOWN)) autonomous();
+            if(glb::con.get_digital(pros::E_CONTROLLER_DIGITAL_RIGHT)) calibrateIMU();
         }
         else
         {

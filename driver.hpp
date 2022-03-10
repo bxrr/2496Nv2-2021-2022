@@ -112,7 +112,7 @@ void arcade_drive(bool all_motors)
 
     else
     {
-        if(abs(glb::imu.get_roll()) > 6 && imu.get_pitch() < 25)
+        if(abs(glb::imu.get_pitch()) > 6 && abs(imu.get_pitch()) < 45)
         {
             mtr::spin(-glb::imu.get_pitch() * 1.5, mode);
         }
@@ -254,7 +254,7 @@ void print_info(int time) // lines: 0-2
 
     if(time % 400 == 0 && time % 500 != 0 && time % 1000 != 0) glb::con.print(0, 0, "8M DRIVE: %s           ", eight_motor);
     if(time % 500 == 0 && time % 1000 != 0) glb::con.print(1, 0, "inert: %.2f           ", glb::imu.get_heading());
-    if(time % 1000 == 0) glb::con.print(2, 0, "TEMP: %.1lf        ", mtr::get_temp(mtr::chas));
+    if(time % 1000 == 0) glb::con.print(2, 0, "TEMP: %.1lf        ", mtr::get_temp(mtr::all));
 }
 
 

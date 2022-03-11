@@ -246,21 +246,21 @@ void cover_control()
 void print_info(int time) // lines: 0-2
 {
     std::string eight_motor;
-
     if(glb::PTO.status())
         eight_motor = "false";
     else
         eight_motor = "true";
 
     if(time % 400 == 0 && time % 500 != 0 && time % 1000 != 0) glb::con.print(0, 0, "8M DRIVE: %s           ", eight_motor);
-    if(time % 500 == 0 && time % 1000 != 0) glb::con.print(1, 0, "inert: %.2f           ", glb::imu.get_heading());
-    if(time % 1000 == 0) glb::con.print(2, 0, "TEMP: %.1lf        ", mtr::get_temp(mtr::all));
+    if(time % 500 == 0 && time % 1000 != 0) glb::con.print(1, 0, "%.2f : %.2f", glb::imu.get_heading(), mtr::pos(mtr::chas));
+    if(time % 1000 == 0) glb::con.print(2, 0, "TEMP: %.1lf        ", mtr::get_temp(mtr::chas));
 }
 
 
-void calibrateIMU()
+void calibrate_robot()
 {
     glb::imu.reset();
+    mtr::reset_pos(mtr::chas);
 }
 
 #endif 

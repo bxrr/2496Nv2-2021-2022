@@ -56,54 +56,54 @@ namespace aut
         toggle_2bar();
         spin_dist(-950, 124.5, 2500);
         goal_cover.toggle();
-        spin_lift(-1600);
-        spin_dist(-150, 124.5, 500);
+        spin_lift(-2000);
+        spin_dist(-120, 124.5, 500);
         toggle_2bar();
         rotate_to(86, 1500);
-        spin_dist(300, 100);
-        spin_dist(500, 50);
-        spin_lift(-1000, 600);
-        drive(0, 0, 0);
-        delay(200);
-        spin_dist(350, 60);
+        spin_dist(500, 90);
+        spin_dist(740, 70);
+        mtr::stop(mtr::chas);
+        spin_lift(-700);
+        delay(400);
+        spin_dist(150, 70);
         chain_clamp.toggle();
-        spin_dist(100, 60);
         drive(0, 0, 0);
+        delay(300);
         spin_lift(4300);
         delay(400);
         rotate_to(123, 1500, 1.3);
         drive(-1700, 100, 2200);
         rotate_to(-84, 1500, 1.2);
-        drive(500, 120, 1500);
+        drive(800, 120, 1500);
     }
 
     void back_tree() // start backward; middle goal -> neutral goal -> alliance goal
     {
         spin_lift(2500);
-        spin_dist(-800, 124.5, 2000);
+        spin_dist(-520, 120, 2000);
         toggle_2bar();
-        spin_dist(-880, 124.5, 2500);
-        spin_dist(-100, 100, 1500);
+        spin_dist(-1300, 120, 2500);
         goal_cover.toggle();
+        spin_lift(-2000);
+        spin_dist(-120, 124.5, 500);
+        mtr::stop(mtr::chas);
         toggle_2bar();
-        spin_lift(-1800);
-        spin_dist(-150, 124.5, 500);
-        rotate_to(110, 2000, 1.1);
-        spin_dist(750);
-        spin_dist(300, 50);
-        drive(0, 0, 0);
-        spin_lift(-800, 600);
-        spin_dist(-50, 50);
-        spin_dist(150, 40);
+        rotate_to(-66.6, 1500);
+        spin_dist(500, 100);
+        spin_dist(740, 70);
+        mtr::stop(mtr::chas);
+        spin_lift(-700);
+        delay(600);
+        spin_dist(200, 70);
         chain_clamp.toggle();
         drive(0, 0, 0);
+        delay(300);
         spin_lift(4300);
         delay(400);
-        rotate_to(0, 1500, 1.3);
-        drive(1750, 100, 2200);
-        rotate_to(180, 1500, 1.2);
-        spin_dist(500, 40, 1500);
-        front_clamp.toggle();
+        rotate_to(225, 1500, 1.2);
+        drive(-1170, 100, 2200);
+        rotate_to(-73.6, 1500, 1.2);
+        drive(600, 120, 1500);
     }
 
     void elev_neu()

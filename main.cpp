@@ -23,8 +23,6 @@ void initialize()
     glb::init_pistons();
 }
 
-void disabled() {}
-
 void competition_initialize() 
 {
     mtr::set_brake(coast, all);
@@ -61,7 +59,7 @@ void opcontrol()
             print_info(time);
             
             if(glb::con.get_digital(pros::E_CONTROLLER_DIGITAL_DOWN)) autonomous();
-            if(glb::con.get_digital(pros::E_CONTROLLER_DIGITAL_RIGHT)) calibrateIMU();
+            if(glb::con.get_digital(pros::E_CONTROLLER_DIGITAL_RIGHT)) calibrate_robot();
         }
         else
         {

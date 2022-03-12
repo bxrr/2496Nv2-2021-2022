@@ -89,7 +89,7 @@ namespace aut
         mtr::stop(mtr::chas);
         toggle_2bar();
         spin_dist(-30, 70);
-        rotate_to(-66.6, 1500);
+        rotate_to(-61.6, 1500);
         spin_dist(500, 100);
         spin_dist(740, 70);
         mtr::stop(mtr::chas);

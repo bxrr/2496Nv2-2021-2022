@@ -85,25 +85,27 @@ namespace aut
         spin_dist(-1300, 120, 2500);
         goal_cover.toggle();
         spin_lift(-2000);
-        spin_dist(-120, 124.5, 500);
+        spin_dist(-150, 124.5, 500);
         mtr::stop(mtr::chas);
         toggle_2bar();
+        spin_dist(-30, 70);
         rotate_to(-66.6, 1500);
         spin_dist(500, 100);
         spin_dist(740, 70);
         mtr::stop(mtr::chas);
         spin_lift(-700);
-        delay(600);
-        spin_dist(200, 70);
+        spin_dist(-30, 30);
+        mtr::stop(mtr::chas);
+        spin_dist(250, 60);
         chain_clamp.toggle();
         drive(0, 0, 0);
         delay(300);
         spin_lift(4300);
         delay(400);
         rotate_to(225, 1500, 1.2);
-        drive(-1170, 100, 2200);
+        drive(-1200, 100, 2200);
         rotate_to(-73.6, 1500, 1.2);
-        drive(600, 120, 1500);
+        drive(750, 120, 1500);
     }
 
     void elev_neu()

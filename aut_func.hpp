@@ -11,7 +11,7 @@
 
 namespace fnc
 {
-    #define AUTO_STRAIGHT_KP 4
+    #define AUTO_STRAIGHT_KP 0
 
     double global_heading = 0;
 
@@ -134,13 +134,6 @@ namespace fnc
 
         global_heading += glb::imu.get_heading() - start_heading;
     }
-
-
-
-
-
-
-
 
 
     void drive_pid(double distance, double max_speed=120, int timeout=5000, double offset=750)

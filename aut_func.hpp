@@ -11,7 +11,7 @@
 
 namespace fnc
 {
-    #define AUTO_STRAIGHT_KP 0
+    #define AUTO_STRAIGHT_KP 4
 
     double global_heading = 0;
 

@@ -35,18 +35,39 @@ namespace aut
         front_clamp.toggle();
     }
 
-    void awp_elev() // start forward; half awp -> middle goal TODO
+    void elev_neu()
     {
-        drive(550, 120, 1500);
-        drive(-550, 120, 1500);
-        rotate(-45, 1500);
-        spin_dist(2200, 90);
-        spin_dist(300, 60);
+        spin_dist(1440);
         chain_clamp.toggle();
-        spin_dist(40, 50);
+        spin_dist(50, 50);
         spin_lift(5000);
-        drive(-2100, 80);
-        rotate(60, false);
+        rotate_to(90, 1100);
+        toggle_2bar();
+        spin_dist(-800);
+        goal_cover.toggle();
+        spin_dist(-100, 100, 300);
+        toggle_2bar();
+        rotate_to(135, 1500);
+        drive(1700, 3000);
+        rotate_to(87, 1500, 1.2);
+        drive(800, 125, 2000);
+    }
+
+    void elev_tree() // start backward; middle goal -> neutral goal -> alliance goal
+    {
+        spin_dist(2200);
+        chain_clamp.toggle();
+        spin_lift(5000);
+        rotate_to(-50, 1500);
+        toggle_2bar();
+        spin_dist(-1000);
+        goal_cover.toggle();
+        spin_dist(-150, 125, 150);
+        toggle_2bar();
+        rotate_to(-125, 1500, 1.3);
+        drive(1200, 3000);
+        rotate_to(117, 2000, 1.2);
+        drive(900);
     }
 
     void back_neu() // start backward; neutral goal -> middle goal -> alliance goal
@@ -77,119 +98,54 @@ namespace aut
         drive(800, 120, 1500);
     }
 
-    void rush_tree() // start backward; middle goal -> neutral goal -> alliance goal
-    {
-        spin_dist(2200);
-        chain_clamp.toggle();
-        spin_lift(5000);
-        rotate_to(-50, 1500);
-        toggle_2bar();
-        spin_dist(-1000);
-        goal_cover.toggle();
-        spin_dist(-150, 125, 150);
-        toggle_2bar();
-        rotate_to(-125, 1500, 1.3);
-        drive(1200, 3000);
-        rotate_to(117, 2000, 1.2);
-        drive(900);
-
-
-        /*
-        spin_lift(2500);
-        spin_dist(-520, 120, 2000);
-        toggle_2bar();
-        spin_dist(-1300, 120, 2500);
-        goal_cover.toggle();
-        spin_lift(-2000);
-        spin_dist(-150, 124.5, 500);
-        mtr::stop(mtr::chas);
-        toggle_2bar();
-        spin_dist(-30, 70);
-        rotate_to(-61.6, 1500);
-        spin_dist(500, 100);
-        spin_dist(740, 70);
-        mtr::stop(mtr::chas);
-        spin_lift(-700);
-        spin_dist(-30, 30);
-        mtr::stop(mtr::chas);
-        spin_dist(250, 60);
-        chain_clamp.toggle();
-        drive(0, 0, 0);
-        delay(300);
-        spin_lift(4300);
-        delay(400);
-        rotate_to(225, 1500, 1.2);
-        drive(-1200, 100, 2200);
-        rotate_to(-73.6, 1500, 1.2);
-        drive(750, 120, 1500);
-        */
-    }
-
-    void elev_neu()
-    {
-        spin_dist(1440);
-        chain_clamp.toggle();
-        spin_dist(50, 50);
-        spin_lift(5000);
-        rotate_to(90, 1100);
-        toggle_2bar();
-        spin_dist(-800);
-        goal_cover.toggle();
-        spin_dist(-100, 100, 300);
-        toggle_2bar();
-        rotate_to(135, 1500);
-        drive(1700, 3000);
-        rotate_to(87, 1500, 1.2);
-        drive(800, 125, 2000);
-    }
-
     void rush_elev()
     {
         spin_dist(1430);
         chain_clamp.toggle();
         spin_dist(50, 50);
+        drive(-720, 124.5, 15000);
+
+        // VERY IFFY PAST HERE.
         spin_lift(5000);
-        drive(-1400);
+        rotate_to(-49, 2000);
+        spin_dist(800, 100);
+        spin_dist(620, 50);
+        front_clamp.toggle();
+        spin_dist(30, 40);
+        rotate_to(-54, 1200);
+        drive(-2000);
     }
 
     void rush_de_elev()
     {
-        spin_lift(2500);
-        spin_dist(-800, 124.5, 2000);
-        toggle_2bar();
-        spin_dist(-1400, 124.5, 2500);
-        toggle_2bar();
-        goal_cover.toggle();
-        drive(60, 100, 100);
-        rotate_to(40, 1300);
-        drive(400, 120, 1500);
-        rotate_to(-17, 1000);
-        drive(2100, 100, 4000);
-        rotate_to(-108, 1500);
-        drive(400, 120, 1500);
-        front_clamp.toggle();
-        delay(300);
-        drive(-200, 100, 500);
-        front_clamp.toggle();
-        delay(100);
-        drive(-100);
-
+        spin_dist(1500);
+        chain_clamp.toggle();
+        spin_dist(50, 50);
+        drive(-1400, 124.5, 12000);
     }
 
-    void back_tree() // elev side
+    void fake_neu() // FAKE TREE, GOES FOR NEU
     {
-        spin_dist(2000, 127, 2000);
-        spin_dist(100, 80, 200);
+        rotate(45, 2000);
+        spin_dist(2040);
         chain_clamp.toggle();
-        spin_dist(40, 127, 100);
-        spin_lift(5000);
-        spin_dist(-800);
+        spin_dist(50, 50);
+        drive(-1200, 124.5, 15000);
+    }
+
+    void fake_tree() // FAKE NEU, GOES FOR TREE
+    {
+        rotate(45, 2000);
+        spin_dist(1430);
+        chain_clamp.toggle();
+        spin_dist(50, 50);
+        drive(-720, 124.5, 15000);
     }
 
 
     // callable list of autons
-    std::vector<void (*)()>  auton_calls{ solo_awp,   awp_elev,   elev_neu,   rush_tree,   back_neu,   rush_elev,   rush_de_elev,   back_tree };
-    std::vector<std::string> auton_names{"solo_awp", "awp_elev", "elev_neu", "rush_tree", "back_neu", "rush_elev", "rush_de_elev", "back_tree"};
+    std::vector<void (*)()>  auton_calls{ solo_awp,   elev_neu,   elev_tree,   back_neu,   rush_elev,   rush_de_elev,   fake_neu,   fake_tree};
+    std::vector<std::string> auton_names{"solo_awp", "elev_neu", "elev_tree", "back_neu", "rush_elev", "rush_de_elev", "fake_neu", "fake_tree"};
 }
 
 

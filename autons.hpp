@@ -103,6 +103,7 @@ namespace aut
         spin_dist(1430);
         chain_clamp.toggle();
         spin_dist(50, 50);
+        PTO.toggle();
         drive(-720, 124.5, 15000);
 
         // VERY IFFY PAST HERE.
@@ -121,6 +122,7 @@ namespace aut
         spin_dist(1500);
         chain_clamp.toggle();
         spin_dist(50, 50);
+        PTO.toggle();
         drive(-1400, 124.5, 12000);
     }
 

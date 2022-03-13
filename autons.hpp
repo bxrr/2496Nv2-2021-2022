@@ -17,27 +17,29 @@ namespace aut
     {
         spin_dist(500, 50);
         chain_clamp.toggle();
+
         spin_lift(5000);
         drive(-390, 124.5, 1400);
         rotate_to(-90, 1500, 1.1);
-        drive(500, 120, 1400);
+        drive(530, 120, 1600);
         rotate_to(-1.5, 1800, 1.05);
         drive(3650, 124.5, 3200, 2000);
         front_clamp.toggle();
         toggle_2bar();
         rotate_to(35, 1800, 1.2);
-        spin_dist(-1700);
+        spin_dist(-1800);
         toggle_2bar();
         goal_cover.toggle();
         spin_dist(-140);
         rotate_to(40, 1000, 1.4);
         spin_dist(1600);
         front_clamp.toggle();
+        
     }
 
     void elev_neu()
     {
-        spin_dist(1440);
+        spin_dist(1460);
         chain_clamp.toggle();
         spin_dist(50, 50);
         spin_lift(5000);
@@ -55,7 +57,7 @@ namespace aut
 
     void elev_tree() // start backward; middle goal -> neutral goal -> alliance goal
     {
-        spin_dist(2200);
+        spin_dist(2250);
         chain_clamp.toggle();
         spin_lift(5000);
         rotate_to(-50, 1500);
@@ -98,23 +100,40 @@ namespace aut
         drive(800, 120, 1500);
     }
 
+    void elev_half()
+    {
+        spin_dist(300, 50);
+        chain_clamp.toggle();
+        delay(300);
+        spin_lift(3000);
+        drive(-300, 2000);
+        rotate_to(130, 2000);
+        toggle_2bar();
+        spin_dist(-2600);
+        goal_cover.toggle();
+        spin_dist(-100, 50, 100);
+        toggle_2bar();
+        drive(2000);
+    }
+
+    void tree_de_elev()
+    {
+        spin_lift(2500);
+        spin_dist(-600);
+        toggle_2bar();
+        spin_dist(-1800);
+        goal_cover.toggle();
+        spin_dist(-100, 50);
+        toggle_2bar();
+        drive(1400, 124, 2500);
+    }
+
     void rush_elev()
     {
-        spin_dist(1430);
+        spin_dist(1460);
         chain_clamp.toggle();
         spin_dist(50, 50);
-        PTO.toggle();
-        drive(-720, 124.5, 15000);
-
-        // VERY IFFY PAST HERE.
-        spin_lift(5000);
-        rotate_to(-49, 2000);
-        spin_dist(800, 100);
-        spin_dist(620, 50);
-        front_clamp.toggle();
-        spin_dist(30, 40);
-        rotate_to(-54, 1200);
-        drive(-2000);
+        drive(-100, 120, 15000);
     }
 
     void rush_de_elev()
@@ -122,8 +141,6 @@ namespace aut
         spin_dist(1500);
         chain_clamp.toggle();
         spin_dist(50, 50);
-        PTO.toggle();
-        drive(-1400, 124.5, 12000);
     }
 
     void fake_neu() // FAKE TREE, GOES FOR NEU
@@ -138,16 +155,25 @@ namespace aut
     void fake_tree() // FAKE NEU, GOES FOR TREE
     {
         rotate(45, 2000);
-        spin_dist(1430);
+        spin_dist(2040);
         chain_clamp.toggle();
         spin_dist(50, 50);
         drive(-720, 124.5, 15000);
     }
 
+    void half_awp_only()
+    {
+        spin_dist(200, 50);
+        chain_clamp.toggle();
+        delay(1000);
+        chain_clamp.toggle();
+        drive(-300);
+    }
+
 
     // callable list of autons
-    std::vector<void (*)()>  auton_calls{ solo_awp,   elev_neu,   elev_tree,   back_neu,   rush_elev,   rush_de_elev,   fake_neu,   fake_tree};
-    std::vector<std::string> auton_names{"solo_awp", "elev_neu", "elev_tree", "back_neu", "rush_elev", "rush_de_elev", "fake_neu", "fake_tree"};
+    std::vector<void (*)()>  auton_calls{ solo_awp,   elev_neu,   elev_tree,   back_neu,   elev_half, tree_de_elev,   rush_elev,   rush_de_elev,   fake_neu,   fake_tree, half_awp_only};
+    std::vector<std::string> auton_names{"solo_awp", "elev_neu", "elev_tree", "back_neu", "elev_half", "tree_de_elev", "rush_elev", "rush_de_elev", "fake_neu", "fake_tree", "half only"};
 }
 
 

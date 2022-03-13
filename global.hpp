@@ -68,7 +68,7 @@ namespace glb
     // motors
     #define P_LEFT_FRONT 2 // PTO left
     #define P_LEFT_MID_FRONT 1
-    #define P_LEFT_MID_BACK 11
+    #define P_LEFT_MID_BACK 13
     #define P_LEFT_BACK 3
     #define P_RIGHT_FRONT 15  // PTO right
     #define P_RIGHT_MID_FRONT 9

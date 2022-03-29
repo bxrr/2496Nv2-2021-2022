@@ -13,6 +13,15 @@ using namespace glb;
 
 namespace aut
 {
+    void test()
+    {
+        drive(2000);
+        drive(-1000);
+        drive(500);
+        drive(-200);
+        drive(50);
+    }
+
     void solo_awp()
     {
         spin_dist(500, 50);
@@ -172,8 +181,8 @@ namespace aut
 
 
     // callable list of autons
-    std::vector<void (*)()>  auton_calls{ solo_awp,   elev_neu,   elev_tree,   back_neu,   elev_half, tree_de_elev,   rush_elev,   rush_de_elev,   fake_neu,   fake_tree, half_awp_only};
-    std::vector<std::string> auton_names{"solo_awp", "elev_neu", "elev_tree", "back_neu", "elev_half", "tree_de_elev", "rush_elev", "rush_de_elev", "fake_neu", "fake_tree", "half only"};
+    std::vector<void (*)()>  auton_calls{ test,   solo_awp,   elev_neu,   elev_tree,   back_neu,   elev_half, tree_de_elev,   rush_elev,   rush_de_elev,   fake_neu,   fake_tree, half_awp_only};
+    std::vector<std::string> auton_names{"test", "solo_awp", "elev_neu", "elev_tree", "back_neu", "elev_half", "tree_de_elev", "rush_elev", "rush_de_elev", "fake_neu", "fake_tree", "half only"};
 }
 
 

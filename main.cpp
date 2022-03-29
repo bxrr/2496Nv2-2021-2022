@@ -56,14 +56,14 @@ void opcontrol()
             twobar_control();
             clamp_control();
             cover_control();
-            print_info(time);
+            print_info(time, aut_name);
             
             if(glb::con.get_digital(pros::E_CONTROLLER_DIGITAL_DOWN)) autonomous();
             if(glb::con.get_digital(pros::E_CONTROLLER_DIGITAL_RIGHT)) calibrate_robot();
         }
         else
         {
-            if(time % 50 == 0) glb::con.print(0, 0, "DISABLED         ");
+            if(time % 50 == 0) glb::con.print(0, 0, "DISABLED             ");
             mtr::stop();
         }   
 

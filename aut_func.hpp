@@ -7,140 +7,18 @@
 #include <math.h>
 
 
-#define PI 3.14159265359
-
 namespace fnc
 {
     #define AUTO_STRAIGHT_KP 4
+    #define AUTO_STRAIGHT_KI 0.05
 
     double global_heading = 0;
 
-    
-    void drive(double distance, double max_speed=120, int timeout=5000, double offset=750)
+    double drive(double distance, double max_speed=120, int timeout=5000, double multiplier=1.0)
     {
         // variables
-        glb::imu.set_heading(180);
-        double start_heading = glb::imu.get_heading();
-        mtr::Mode mode = glb::PTO.status() ? mtr::chas : mtr::all;
-        double target = mtr::pos(mode) + distance;
-
-        bool within_range = false;
-        double within_range_err = 10;
-        int within_range_exit = 300;
-        int within_range_time;
-
-        int time = 0;
-        // control loop
-        while(time < timeout)
-        {
-            // update variables
-            double current = mtr::pos(mode);
-            double error = target - current; 
-            double speed;
-
-            // calculate speeds
-            if(abs(error) >= offset)
-                speed = max_speed;
-            else if(abs(error) >= 75 && abs(error) < offset)
-                speed = max_speed * sin((PI * abs(error)) / (2 * offset));
-            else
-                speed = 90 / offset * abs(error) + 8;
-            
-            speed = error < 0 ? -speed : speed;
-            double auto_straight = (start_heading - glb::imu.get_heading()) * AUTO_STRAIGHT_KP;
-            
-            // apply speeds
-            mtr::spin_left(speed + auto_straight, mode);
-            mtr::spin_right(speed - auto_straight, mode);
-
-            // print error
-            if(time % 50 == 0) glb::con.print(0, 0, "err: %f      ", error);
-            
-            // check for exit
-            if(abs(error) <= within_range_err)
-            {
-                if(!within_range)
-                {
-                    within_range = true;
-                    within_range_time = time;
-                }
-                else if(within_range_time + within_range_exit <= time)
-                {
-                    break;
-                }
-            }
-            else within_range = false;
-
-            // increment time
-            pros::delay(1);
-            time += 1;
-        }
-        // stop motors once out of loop
-        mtr::stop(mode);
-        global_heading += glb::imu.get_heading() - start_heading;
-    }
-
-
-
-    void rotate(double degrees, int timeout=3000, float multiplier=1.0)
-    {
-        // variables
-        double start_heading = degrees > 0 ? 25 : 335;
-        glb::imu.set_heading(start_heading);
-        double target = glb::imu.get_heading() + degrees;
-        mtr::Mode mode = glb::PTO.status() ? mtr::chas : mtr::all;
-
-        bool within_range = false;
-        double within_range_err = 0.35;
-        int within_range_exit = 300;
-        int within_range_time;
-
-        int time = 0;
-
-        // control loop
-        while(time < timeout)
-        {
-            // calculate variables
-            double error = target - glb::imu.get_heading();
-            double speed = multiplier * 25.5 * log(0.25 * (abs(error) + 4)) + 5;
-            speed = error < 0 ? -speed : speed;
-
-            // apply speeds
-            mtr::spin_left(speed, mode);
-            mtr::spin_right(-speed, mode);
-
-            // print error
-            if(time % 50 == 0) glb::con.print(0, 0, "err: %f      ", error);
-
-            // check for exit
-            if(abs(error) <= within_range_err)
-            {
-                if(!within_range)
-                {
-                    within_range = true;
-                    within_range_time = time;
-                }
-                else if(within_range_time + within_range_exit <= time)
-                {
-                    break;
-                }
-            }
-            else within_range = false;
-
-            // increment time
-            pros::delay(1);
-            time += 1;
-        }
-
-        global_heading += glb::imu.get_heading() - start_heading;
-    }
-
-
-    void drive_pid(double distance, double max_speed=120, int timeout=5000, double offset=750)
-    {
-        // variables
-        #define DRIVE_KP 0.47
-        #define DRIVE_KI 0.001
+        #define DRIVE_KP 0.5
+        #define DRIVE_KI 0.004
         #define DRIVE_KD 9
 
         mtr::Mode mode = glb::PTO.status() ? mtr::chas : mtr::all;
@@ -152,9 +30,11 @@ namespace fnc
         double integral = 0;
         double last_error;
 
+        double straight_integral = 0;
+
         bool within_range = false;
-        double within_range_err = 5.0;
-        int within_range_exit = 50;
+        double within_range_err = 1.0;
+        int within_range_exit = 5000;
         int within_range_time;
 
         int time = 0;
@@ -164,15 +44,16 @@ namespace fnc
             // update variables
             last_error = error;
             error = target - mtr::pos();
-            integral += (abs(error) * DRIVE_KP < max_speed) * error; // if P is less than the max speed, start adding to the integral
+            integral += (abs(error) * DRIVE_KP < 30) * error;
             double derivative = error - last_error;
+            straight_integral += start_heading - glb::imu.get_heading();
 
             // speed variables
             double base_speed = error * DRIVE_KP + integral * DRIVE_KI + derivative * DRIVE_KD;
-            double correction_speed = (start_heading - glb::imu.get_heading()) * AUTO_STRAIGHT_KP;
+            double correction_speed = (start_heading - glb::imu.get_heading()) * AUTO_STRAIGHT_KP + (straight_integral * AUTO_STRAIGHT_KI);
             
             // apply speeds
-            if(abs(base_speed) > max_speed) base_speed = base_speed > 0 ? max_speed : -max_speed;
+            if(abs(base_speed) > max_speed) base_speed = multiplier * (base_speed > 0 ? max_speed : -max_speed);
             mtr::spin_left(base_speed + correction_speed, mode);
             mtr::spin_right(base_speed - correction_speed, mode);
 
@@ -201,6 +82,7 @@ namespace fnc
         // stop motors once out of loop
         mtr::stop(mode);
         global_heading += glb::imu.get_heading() - start_heading;
+        return error;
     }
 
     void spin_dist(double distance, double speed=124.5, int timeout=5000)
@@ -212,13 +94,16 @@ namespace fnc
         mtr::Mode mode = glb::PTO.status() ? mtr::chas : mtr::all;
         speed = distance < 0 ? -abs(speed) : abs(speed);
 
+        double straight_integral = 0;
+
         int time = 0;
 
         // control loop
         while((distance < 0 ? mtr::pos() > target : mtr::pos() < target) && time < timeout)
         {
             // calculate auto straight and apply speeds
-            double auto_straight = (start_heading - glb::imu.get_heading()) * AUTO_STRAIGHT_KP;
+            straight_integral += start_heading - glb::imu.get_heading();
+            double auto_straight = (start_heading - glb::imu.get_heading()) * AUTO_STRAIGHT_KP + (straight_integral * AUTO_STRAIGHT_KI);
             mtr::spin_left(speed + auto_straight, mode);
             mtr::spin_right(speed - auto_straight, mode);
 
@@ -231,11 +116,11 @@ namespace fnc
         global_heading += glb::imu.get_heading() - start_heading;
     }
    
-    void rotate_pid(double degrees, int timeout=3000, float multiplier=1.0)
+    void rotate(double degrees, int timeout=3000, float multiplier=1.0)
     {
-        #define ROTATE_KP 1.3
-        #define ROTATE_KI 0.000
-        #define ROTATE_KD 12
+        #define ROTATE_KP 1.2
+        #define ROTATE_KI 0.005
+        #define ROTATE_KD 5
 
         // variables
         mtr::Mode mode = glb::PTO.status() ? mtr::chas : mtr::all;
@@ -260,12 +145,11 @@ namespace fnc
             // update variables
             last_error = error;
             error = target - glb::imu.get_heading();
-            if(abs(error) < 90) integral += error;
+            if(abs(error) < 45) integral += error;
             double derivative = error - last_error;
 
             // speed variables
             double speed = multiplier * (error * ROTATE_KP + integral * ROTATE_KI + derivative * ROTATE_KD);
-            if(abs(speed) < 15) speed = speed > 0 ? 15 : -15;
             
             // apply speeds
             mtr::spin_left(speed, mode);
@@ -301,7 +185,7 @@ namespace fnc
     void rotate_to(double degree_to, int timeout=5000, float multiplier=1.0)
     {
         double degree = degree_to - global_heading;
-        if(degree > 180) degree = -(360 - degree);
+        degree = (degree > 180) ? -(360 - degree) : (360 + degree); // optimize the turn direction
         rotate(degree, timeout, multiplier);
     }
 

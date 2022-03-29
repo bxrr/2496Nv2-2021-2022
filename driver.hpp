@@ -243,17 +243,17 @@ void cover_control()
     else first_press = true;
 }
 
-void print_info(int time) // lines: 0-2
+void print_info(int time, std::string aut_name) // lines: 0-2
 {
     std::string eight_motor;
     if(glb::PTO.status())
-        eight_motor = "false";
+        eight_motor = "F";
     else
-        eight_motor = "true";
+        eight_motor = "T";
 
-    if(time % 400 == 0 && time % 500 != 0 && time % 1000 != 0) glb::con.print(0, 0, "8M DRIVE: %s           ", eight_motor);
-    if(time % 500 == 0 && time % 1000 != 0) glb::con.print(1, 0, "%.2f : %.2f", glb::imu.get_heading(), mtr::pos(mtr::chas));
-    if(time % 1000 == 0) glb::con.print(2, 0, "TEMP: %.1lf        ", mtr::get_temp(mtr::chas));
+    if(time % 500 == 0 && time % 200 != 0 && time % 200 != 0) glb::con.print(0, 0, "8M: %s | TEMP: %.1lf         ", eight_motor, mtr::get_temp(mtr::chas));
+    if(time % 200 == 0 && time % 500 != 0 && time % 5000 != 0) glb::con.print(1, 0, "%.2f : %.2f", glb::imu.get_heading(), mtr::pos(mtr::chas));
+    if(time % 5000 == 0) glb::con.print(2, 0, "AUTON: %s        ", aut_name);
 }
 
 

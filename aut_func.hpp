@@ -9,15 +9,15 @@
 
 namespace fnc
 {
-    #define AUTO_STRAIGHT_KP 4
-    #define AUTO_STRAIGHT_KI 0.05
+    #define IMU_STRAIGHT_KP 0 // 1.5
+    #define MTR_STRAIGHT_KP 0.7
 
     double global_heading = 0;
 
     double drive(double distance, double max_speed=120, int timeout=5000, double multiplier=1.0)
     {
         // variables
-        #define DRIVE_KP 0.5
+        #define DRIVE_KP 0.6
         #define DRIVE_KI 0.004
         #define DRIVE_KD 9
 
@@ -31,6 +31,8 @@ namespace fnc
         double last_error;
 
         double straight_integral = 0;
+        double left_start = mtr::left_pos();
+        double right_start = mtr::right_pos();
 
         bool within_range = false;
         double within_range_err = 1.0;
@@ -44,13 +46,14 @@ namespace fnc
             // update variables
             last_error = error;
             error = target - mtr::pos();
-            integral += (abs(error) * DRIVE_KP < 30) * error;
+            integral += (abs(error) * DRIVE_KP < 40) * error;
             double derivative = error - last_error;
             straight_integral += start_heading - glb::imu.get_heading();
 
             // speed variables
             double base_speed = error * DRIVE_KP + integral * DRIVE_KI + derivative * DRIVE_KD;
-            double correction_speed = (start_heading - glb::imu.get_heading()) * AUTO_STRAIGHT_KP + (straight_integral * AUTO_STRAIGHT_KI);
+            double correction_speed = (start_heading - glb::imu.get_heading()) * IMU_STRAIGHT_KP + 
+                                      ((mtr::right_pos() - right_start) - (mtr::left_pos() - left_start)) * MTR_STRAIGHT_KP;
             
             // apply speeds
             if(abs(base_speed) > max_speed) base_speed = multiplier * (base_speed > 0 ? max_speed : -max_speed);
@@ -95,6 +98,8 @@ namespace fnc
         speed = distance < 0 ? -abs(speed) : abs(speed);
 
         double straight_integral = 0;
+        double left_start = mtr::left_pos();
+        double right_start = mtr::right_pos();
 
         int time = 0;
 
@@ -103,9 +108,10 @@ namespace fnc
         {
             // calculate auto straight and apply speeds
             straight_integral += start_heading - glb::imu.get_heading();
-            double auto_straight = (start_heading - glb::imu.get_heading()) * AUTO_STRAIGHT_KP + (straight_integral * AUTO_STRAIGHT_KI);
-            mtr::spin_left(speed + auto_straight, mode);
-            mtr::spin_right(speed - auto_straight, mode);
+            double correction_speed = (start_heading - glb::imu.get_heading()) * IMU_STRAIGHT_KP + 
+                                      ((mtr::right_pos() - right_start) - (mtr::left_pos() - left_start)) * MTR_STRAIGHT_KP;
+            mtr::spin_left(speed + correction_speed, mode);
+            mtr::spin_right(speed - correction_speed, mode);
 
             pros::delay(1);
             time += 1;
@@ -184,8 +190,8 @@ namespace fnc
 
     void rotate_to(double degree_to, int timeout=5000, float multiplier=1.0)
     {
-        double degree = degree_to - global_heading;
-        degree = (degree > 180) ? -(360 - degree) : (360 + degree); // optimize the turn direction
+        double degree = degree_to - global_heading % 360;
+        degree = (degree > 180) ? -(360 - degree) : ((degree < -180) ? (360 + degree) : (degree)); // optimize the turn direction
         rotate(degree, timeout, multiplier);
     }
 

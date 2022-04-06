@@ -105,21 +105,21 @@ void arcade_drive(bool all_motors)
 
     if(left || right)
     {
-
         mtr::spin_left(left + right, mode);
         mtr::spin_right(left - right, mode);
     }
 
     else
     {
-        if(abs(glb::imu.get_pitch()) > 6 && abs(imu.get_pitch()) < 45)
-        {
-            mtr::spin(-glb::imu.get_pitch() * 1.5, mode);
-        }
-        else
-        {
-            mtr::stop(mode);
-        }
+        mtr::stop(mode);
+        // if(abs(glb::imu.get_pitch()) > 6 && abs(imu.get_pitch()) < 45)
+        // {
+        //     mtr::spin(-glb::imu.get_pitch() * 1.5, mode);
+        // }
+        // else
+        // {
+        //     mtr::stop(mode);
+        // }
     }
 }
 
@@ -174,15 +174,15 @@ void chainbar_control()
 {
     if(glb::con.get_digital(pros::E_CONTROLLER_DIGITAL_R1) && !glb::con.get_digital(pros::E_CONTROLLER_DIGITAL_L1) && !glb::con.get_digital(pros::E_CONTROLLER_DIGITAL_L2) && !glb::con.get_digital(pros::E_CONTROLLER_DIGITAL_R2)) 
     {
-        PTO_on();
-        mtr::spin(127, front);
+        PTO_off();
+        mtr::spin(-127, front);
     }
     else if(glb::con.get_digital(pros::E_CONTROLLER_DIGITAL_R2) && !glb::con.get_digital(pros::E_CONTROLLER_DIGITAL_L1) && !glb::con.get_digital(pros::E_CONTROLLER_DIGITAL_L2) && !glb::con.get_digital(pros::E_CONTROLLER_DIGITAL_R1)) 
     {
-        PTO_on();
-        mtr::spin(-127, front);
+        PTO_off();
+        mtr::spin(127, front);
     }
-    else if(glb::PTO.status())
+    else if(!glb::PTO.status())
     {
         mtr::stop(front);
     }
@@ -247,9 +247,9 @@ void print_info(int time, std::string aut_name) // lines: 0-2
 {
     std::string eight_motor;
     if(glb::PTO.status())
-        eight_motor = "F";
-    else
         eight_motor = "T";
+    else
+        eight_motor = "F";
 
     if(time % 500 == 0 && time % 200 != 0 && time % 200 != 0) glb::con.print(0, 0, "8M: %s | TEMP: %.1lf         ", eight_motor, mtr::get_temp(mtr::chas));
     if(time % 200 == 0 && time % 500 != 0 && time % 5000 != 0) glb::con.print(1, 0, "%.2f : %.2f", glb::imu.get_heading(), mtr::pos(mtr::chas));

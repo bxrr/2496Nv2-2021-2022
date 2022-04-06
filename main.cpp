@@ -51,7 +51,7 @@ void opcontrol()
         {
             // driver.hpp control functions
             PTO_control();
-            arcade_drive(!PTO.status());
+            arcade_drive(PTO.status());
             chainbar_control();
             twobar_control();
             clamp_control();

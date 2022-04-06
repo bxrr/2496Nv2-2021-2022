@@ -66,30 +66,30 @@ namespace obj
 namespace glb
 {
     // motors
-    #define P_LEFT_FRONT 2 // PTO left
-    #define P_LEFT_MID_FRONT 1
-    #define P_LEFT_MID_BACK 13
-    #define P_LEFT_BACK 3
-    #define P_RIGHT_FRONT 15  // PTO right
+    #define P_LEFT_FRONT 3 // PTO left
+    #define P_LEFT_MID_FRONT 2
+    #define P_LEFT_MID_BACK 12
+    #define P_LEFT_BACK 13
+    #define P_RIGHT_FRONT 7  // PTO right
     #define P_RIGHT_MID_FRONT 9
     #define P_RIGHT_MID_BACK 19
-    #define P_RIGHT_BACK 6
+    #define P_RIGHT_BACK 15
     // pistons
-    #define P_PTO 'F'
-    #define P_LEFT_BACK_LIFT 'D'
-    #define P_RIGHT_BACK_LIFT 'C'
-    #define P_CHAIN_CLAMP 'E'
-    #define P_FRONT_CLAMP 'G'
-    #define P_GOAL_COVER 'H'
+    #define P_PTO 'A'
+    #define P_LEFT_BACK_LIFT 'H'
+    #define P_RIGHT_BACK_LIFT 'G'
+    #define P_CHAIN_CLAMP 'D'
+    #define P_FRONT_CLAMP 'C'
+    #define P_GOAL_COVER 'B' 
     // misc
-    #define P_IMU 12
+    #define P_IMU 11
 
     // chassis
-    pros::Motor left_front(P_LEFT_FRONT, pros::E_MOTOR_GEARSET_06, true);
+    pros::Motor left_front(P_LEFT_FRONT, pros::E_MOTOR_GEARSET_06, false);
     pros::Motor left_mid_front(P_LEFT_MID_FRONT, pros::E_MOTOR_GEARSET_06, false);
     pros::Motor left_mid_back(P_LEFT_MID_BACK, pros::E_MOTOR_GEARSET_06, false);
     pros::Motor left_back(P_LEFT_BACK, pros::E_MOTOR_GEARSET_06, false);
-    pros::Motor right_front(P_RIGHT_FRONT, pros::E_MOTOR_GEARSET_06, false);
+    pros::Motor right_front(P_RIGHT_FRONT, pros::E_MOTOR_GEARSET_06, true);
     pros::Motor right_mid_front(P_RIGHT_MID_FRONT, pros::E_MOTOR_GEARSET_06, true);
     pros::Motor right_mid_back(P_RIGHT_MID_BACK, pros::E_MOTOR_GEARSET_06, true);
     pros::Motor right_back(P_RIGHT_BACK, pros::E_MOTOR_GEARSET_06, true);
@@ -98,7 +98,7 @@ namespace glb
     pros::Imu imu(P_IMU);
     pros::Controller con(pros::E_CONTROLLER_MASTER);
     // piston
-    obj::Piston PTO(P_PTO, true);
+    obj::Piston PTO(P_PTO, false);
     obj::Piston front_clamp(P_FRONT_CLAMP, false);
     obj::Piston lback_lift(P_LEFT_BACK_LIFT, true);
     obj::Piston rback_lift(P_RIGHT_BACK_LIFT, true);

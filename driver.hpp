@@ -11,22 +11,22 @@ using namespace mtr;
 
 
 
-void PTO_on() // access lift
+void PTO_on() // 8 motor
 {
+    mtr::set_brake(mtr::coast, mtr::front);
     if(glb::PTO.set(true)) 
     {
-        glb::con.set_text(3, 0, "."); 
-        mtr::set_brake(mtr::hold, mtr::front);
+        glb::con.set_text(3, 0, ".."); 
         mtr::stop(mtr::front);
     }
 }
 
-void PTO_off() // 8 motor drive
+void PTO_off() // lift
 {
+    mtr::set_brake(mtr::hold, mtr::front);
     if(glb::PTO.set(false)) 
     {
-        glb::con.set_text(3, 0, "..");
-        mtr::set_brake(mtr::coast, mtr::front);
+        glb::con.set_text(3, 0, ".");
         mtr::stop(mtr::front);
     }
 }
@@ -111,34 +111,9 @@ void arcade_drive(bool all_motors)
 
     else
     {
-        mtr::stop(mode);
-        // if(abs(glb::imu.get_pitch()) > 6 && abs(imu.get_pitch()) < 45)
-        // {
-        //     mtr::spin(-glb::imu.get_pitch() * 1.5, mode);
-        // }
-        // else
-        // {
-        //     mtr::stop(mode);
-        // }
-    }
-}
-
-void tank_drive(bool all_motors)
-{
-    Mode mode = all;
-    if(all_motors) mode = all;
-    else mode = chas;
-    
-    if(abs(glb::con.get_analog(pros::E_CONTROLLER_ANALOG_LEFT_Y)) > 10 || abs(glb::con.get_analog(pros::E_CONTROLLER_ANALOG_RIGHT_Y)) > 10)
-    {
-        mtr::spin_left(glb::con.get_analog(pros::E_CONTROLLER_ANALOG_LEFT_Y), mode);
-        mtr::spin_right(glb::con.get_analog(pros::E_CONTROLLER_ANALOG_RIGHT_Y), mode);
-    }
-    else
-    {
-        if(abs(glb::imu.get_roll()) > 6)
+        if(abs(glb::imu.get_pitch()) > 6 && abs(imu.get_pitch()) < 45)
         {
-            mtr::spin(-glb::imu.get_roll() * 1.5, mode);
+            mtr::spin(glb::imu.get_pitch() * 1.5, mode);
         }
         else
         {
@@ -245,13 +220,13 @@ void cover_control()
 
 void print_info(int time, std::string aut_name) // lines: 0-2
 {
-    std::string eight_motor;
+    std::string motorType;
     if(glb::PTO.status())
-        eight_motor = "T";
+        motorType = "8M";
     else
-        eight_motor = "F";
+        motorType = "6M";
 
-    if(time % 500 == 0 && time % 200 != 0 && time % 200 != 0) glb::con.print(0, 0, "8M: %s | TEMP: %.1lf         ", eight_motor, mtr::get_temp(mtr::chas));
+    if(time % 500 == 0 && time % 200 != 0 && time % 200 != 0) glb::con.print(0, 0, "%s | TEMP: %.1lf         ", motorType , mtr::get_temp(mtr::chas));
     if(time % 200 == 0 && time % 500 != 0 && time % 5000 != 0) glb::con.print(1, 0, "%.2f : %.2f", glb::imu.get_heading(), mtr::pos(mtr::chas));
     if(time % 5000 == 0) glb::con.print(2, 0, "AUTON: %s        ", aut_name);
 }

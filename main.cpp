@@ -9,18 +9,21 @@ using namespace glb; // global variables
 // global variables
 void (*auton)() = aut::auton_calls.at(2);
 std::string aut_name = aut::auton_names.at(2);
+bool start_8m = (aut_name == "solo_awp") ? false : true;
 
 // functions
 void initialize() 
 {
     con.clear();
     pros::lcd::set_text(0, "2496NextLevelNinjas");
-    mtr::set_brake(coast, all);
+    mtr::set_brake(coast, chas);
+    mtr::set_brake(hold, front);
 
     auton = auton_selector(aut_name);
     glb::con.clear();
     mtr::reset_pos();
     glb::init_pistons();
+    glb::PTO.set(start_8m);
 }
 
 void competition_initialize() 

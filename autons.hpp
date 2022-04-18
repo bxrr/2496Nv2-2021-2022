@@ -15,83 +15,105 @@ namespace aut
 {
     void test()
     {
-        drive(2000);
-        drive(-1000);
-        drive(500);
-        drive(-250);
-        
-        rotate(90);
-        rotate_to(45);
-        rotate_to(-45);
+        drive(-500);
+        rotate_to(90);
+        rotate_to(0);
     }
 
     void solo_awp()
     {
-        spin_dist(500, 50);
+        drive(350, 100, 1200);
         chain_clamp.toggle();
-
-        spin_lift(5000);
-        drive(-390, 124.5, 1400);
-        rotate_to(-90, 1500, 1.1);
-        drive(530, 120, 1600);
-        rotate_to(-1.5, 1800, 1.05);
-        drive(3650, 124.5, 3200, 2000);
+        drive(0, 0, 0);
+        delay(300);
+        spin_lift(-4500);
+        drive(-220, 120, 1200);
+        delay(400);
+        rotate_to(90, 1500, 1.15);
+        drive(-725, 120, 3000);
+        rotate_to(0, 2000, 1.15);
+        drive(3480, 100, 4000);
         front_clamp.toggle();
-        toggle_2bar();
-        rotate_to(35, 1800, 1.2);
-        spin_dist(-1800);
-        toggle_2bar();
-        goal_cover.toggle();
-        spin_dist(-140);
-        rotate_to(40, 1000, 1.4);
-        spin_dist(1600);
+        rotate_to(-5, 1000, 2.5);
+        drive(-2000, 90, 3000);
         front_clamp.toggle();
-        
     }
 
     void elev_neu()
     {
-        double initial_rush = 1460;
-        double rush_return = 500;
-        double turn_to_tree = -55.222; // turn
-        double tree_rush = 880.584;
-        double tree_return = 300;
-        double alliance_align = -45; // turn
-        double alliance_grab = -900;
-
-        initial_rush -= drive(initial_rush);
+        spin_dist(1400);
+        spin_dist(100, 90);
         chain_clamp.toggle();
-        spin_lift(5000);
-        rush_return -= drive(rush_return - initial_rush);
-        rotate_to(turn_to_tree);
-        tree_rush -= drive(tree_rush);
+        spin_lift(-4800);
+        drive(-600, 120, 1000, 1.3);
+        rotate_to(-64.222, 1400, 1.3);
+        spin_dist(1050);
+        spin_dist(450, 80);
         front_clamp.toggle();
-        tree_return -= drive(tree_return - tree_rush);
-        rotate_to(alliance_align);
-        alliance_grab -= drive(alliance_grab);
+        spin_dist(50, 80);
+        toggle_2bar();
+        drive(-1400, 120, 2500);
+        rotate_to(-45, 1500, 1.3);
+        drive(-1200);
     }
 
     void elev_tree()
     {
-        spin_dist(2250);
+        spin_dist(2060);
         chain_clamp.toggle();
-        spin_lift(5000);
-        rotate_to(-50, 1500);
+        spin_dist(25);
+        spin_lift(-4500);
+        drive(-800, 120, 1800);
+        rotate_to(70, 2200, 1.2);
+        spin_dist(750);
+        spin_dist(100, 90);
+        front_clamp.toggle();
+        spin_dist(40, 90);
+        drive(-700, 120, 1500);
         toggle_2bar();
-        spin_dist(-1000);
-        goal_cover.toggle();
-        spin_dist(-150, 125, 150);
-        toggle_2bar();
-        rotate_to(-125, 1500, 1.3);
-        drive(1200, 3000);
-        rotate_to(117, 2000, 1.2);
-        drive(900);
+        rotate_to(-35);
+        drive(-1250);
     }
 
+    void deelev_neu()
+    {
+        spin_dist(1550);
+        spin_dist(100, 90);
+        chain_clamp.toggle();
+        spin_lift(-4800);
+        drive(-750, 120, 1500);
+        rotate_to(43, 1500, 1.3);
+        spin_dist(1300);
+        spin_dist(290, 90);
+        front_clamp.toggle();
+        spin_dist(40, 90);
+        drive(-2000, 120, 3000);
+        rotate_to(0, 2000, 1.3);
+        drive(-900, 120, 2000);
+        rotate_to(-90, 2000, 1.3);
+        delay(500);
+        toggle_2bar();
+        drive(-600);
+    }
+
+    void deelev_tree()
+    {
+        spin_dist(2260);
+        chain_clamp.toggle();
+        spin_lift(-4500);
+        drive(-800);
+        rotate_to(-90);
+    }
+    
+    void b_deelev_neu()
+    {
+        spin_dist(-1650);
+        drive(-5, 120, 4000, 1500);
+    }
 
     // callable list of autons
-    std::vector<void (*)()>  auton_calls{ test,   solo_awp,   elev_neu,   elev_tree, };
-    std::vector<std::string> auton_names{"test", "solo_awp", "elev_neu", "elev_tree" };
+    std::vector<void (*)()>  auton_calls{ test,   solo_awp,   elev_neu,   elev_tree,   deelev_neu,   deelev_tree,   b_deelev_neu  };
+    std::vector<std::string> auton_names{"test", "solo_awp", "elev_neu", "elev_tree", "deelev_neu", "deelev_tree", "b_deelev_neu" };
 }
 
 

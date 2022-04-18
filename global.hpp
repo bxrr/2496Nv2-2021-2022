@@ -78,7 +78,7 @@ namespace glb
     #define P_PTO 'A'
     #define P_LEFT_BACK_LIFT 'H'
     #define P_RIGHT_BACK_LIFT 'G'
-    #define P_CHAIN_CLAMP 'D'
+    #define P_CHAIN_CLAMP 'F'
     #define P_FRONT_CLAMP 'C'
     #define P_GOAL_COVER 'B' 
     // misc
@@ -100,14 +100,13 @@ namespace glb
     // piston
     obj::Piston PTO(P_PTO, false);
     obj::Piston front_clamp(P_FRONT_CLAMP, false);
-    obj::Piston lback_lift(P_LEFT_BACK_LIFT, true);
-    obj::Piston rback_lift(P_RIGHT_BACK_LIFT, true);
-    obj::Piston chain_clamp(P_CHAIN_CLAMP, true);
-    obj::Piston goal_cover(P_GOAL_COVER, true);
+    obj::Piston lback_lift(P_LEFT_BACK_LIFT, false);
+    obj::Piston rback_lift(P_RIGHT_BACK_LIFT, false);
+    obj::Piston chain_clamp(P_CHAIN_CLAMP, false);
+    obj::Piston goal_cover(P_GOAL_COVER, false);
 
     void init_pistons()
     {
-        glb::PTO.initialize();
         glb::front_clamp.initialize();
         glb::chain_clamp.initialize();
         glb::lback_lift.initialize();

@@ -7,9 +7,8 @@ using namespace glb; // global variables
 
 
 // global variables
-void (*auton)() = aut::auton_calls.at(2);
-std::string aut_name = aut::auton_names.at(2);
-bool start_8m = (aut_name == "solo_awp") ? false : true;
+void (*auton)() = aut::auton_calls.at(1);
+std::string aut_name = aut::auton_names.at(1);
 
 // functions
 void initialize() 
@@ -20,6 +19,8 @@ void initialize()
     mtr::set_brake(hold, front);
 
     auton = auton_selector(aut_name);
+    bool start_8m = (aut_name == "solo_awp") ? false : true;
+
     glb::con.clear();
     mtr::reset_pos();
     glb::init_pistons();

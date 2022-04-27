@@ -30,7 +30,7 @@ namespace aut
         drive(-220, 120, 1200);
         delay(400);
         rotate_to(90, 1500, 1.15);
-        drive(-725, 120, 3000);
+        drive(-730, 120, 3000);
         rotate_to(0, 2000, 1.15);
         drive(3480, 100, 4000);
         front_clamp.toggle();
@@ -44,18 +44,17 @@ namespace aut
         spin_dist(1400);
         spin_dist(100, 90);
         chain_clamp.toggle();
-        spin_lift(-4800);
+        spin_lift(-4500);
         drive(-600, 120, 1000, 1.3);
-        rotate_to(-64.222, 1400, 1.3);
-        spin_dist(1050);
-        spin_dist(450, 80);
-        front_clamp.toggle();
-        spin_dist(50, 80);
         toggle_2bar();
-        drive(-1400, 120, 2500);
-        rotate_to(-45, 1500, 1.3);
-        drive(-1200);
-    }
+        rotate_to(123.5, 2500, 1.3);
+        spin_dist(-1250);
+        drive(-100, 120, 1000);
+        toggle_2bar();
+        delay(500);
+        drive(2600, 120, 3500);
+        front_clamp.toggle();
+    }// hello how are you BRANDON it is good to see you should play BTD6 woith me <3
 
     void elev_tree()
     {
@@ -64,14 +63,14 @@ namespace aut
         spin_dist(25);
         spin_lift(-4500);
         drive(-800, 120, 1800);
-        rotate_to(70, 2200, 1.2);
+        rotate_to(69, 2200, 1.2);
         spin_dist(750);
-        spin_dist(100, 90);
+        spin_dist(130, 90);
         front_clamp.toggle();
-        spin_dist(40, 90);
-        drive(-700, 120, 1500);
+        spin_dist(50, 90);
+        drive(-780, 120, 1500);
         toggle_2bar();
-        rotate_to(-35);
+        rotate_to(-38, 3000, 1.4);
         drive(-1250);
     }
 
@@ -107,8 +106,14 @@ namespace aut
     
     void b_deelev_neu()
     {
-        spin_dist(-1650);
-        drive(-5, 120, 4000, 1500);
+        drive(-150, 120, 500, 100, 0);
+        toggle_2bar();
+        drive(-1600, 120, 1500, 100, 0);
+        goal_cover.toggle();
+        drive(-400, 120, 1500, 100, 0);
+        drive(-20, 120, 4000, 100, 2000);
+        toggle_2bar();
+        drive(900);
     }
 
     // callable list of autons

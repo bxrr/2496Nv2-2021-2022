@@ -9,8 +9,8 @@
 
 namespace fnc
 {
-    #define IMU_STRAIGHT_KP 2
-    #define MTR_STRAIGHT_KP 2
+    #define IMU_STRAIGHT_KP 4
+    #define MTR_STRAIGHT_KP 0
 
     double global_heading = 0;
 
@@ -143,7 +143,7 @@ namespace fnc
         global_heading += glb::imu.get_heading() - start_heading;
     }
    
-    void rotate(double degrees, int timeout=3500, float multiplier=1.0)
+    void rotate(double degrees, int timeout=3500, float multiplier=1.0, double within_range_err=0.2)
     {
         // variables
         double start_heading = degrees > 0 ? 25 : 335;
@@ -153,8 +153,7 @@ namespace fnc
         mtr::set_brake(mtr::coast, mode);
 
         bool within_range = false;
-        double within_range_err = 0.15;
-        int within_range_exit = 300;
+        int within_range_exit = 200;
         int within_range_time;
 
         int time = 0;
@@ -197,11 +196,11 @@ namespace fnc
         global_heading += glb::imu.get_heading() - start_heading;
     }
 
-    void rotate_to(double degree_to, int timeout=3500, float multiplier=1.0)
+    void rotate_to(double degree_to, int timeout=3500, float multiplier=1.0, double within_range_err=0.2)
     {
         double degree = degree_to - global_heading;
         degree = (degree > 180) ? -(360 - degree) : ((degree < -180) ? (360 + degree) : (degree)); // optimize the turn direction
-        rotate(degree, timeout, multiplier);
+        rotate(degree, timeout, multiplier, within_range_err);
     }
 
     inline void spin_lift(double distance, double speed=600) // negative = up, positive = down

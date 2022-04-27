@@ -15,9 +15,7 @@ namespace aut
 {
     void test()
     {
-        drive(-500);
-        rotate_to(90);
-        rotate_to(0);
+        drive(1200);
     }
 
     void solo_awp()

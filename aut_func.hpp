@@ -9,7 +9,7 @@
 
 namespace fnc
 {
-    #define IMU_STRAIGHT_KP 4
+    #define IMU_STRAIGHT_KP 40
     #define MTR_STRAIGHT_KP 0
 
     double global_heading = 0;

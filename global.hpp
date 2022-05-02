@@ -66,8 +66,8 @@ namespace obj
 namespace glb
 {
     // motors
-    #define P_LEFT_FRONT 3 // PTO left
-    #define P_LEFT_MID_FRONT 2
+    #define P_LEFT_FRONT 2 // PTO left
+    #define P_LEFT_MID_FRONT 3
     #define P_LEFT_MID_BACK 12
     #define P_LEFT_BACK 13
     #define P_RIGHT_FRONT 7  // PTO right
@@ -80,7 +80,8 @@ namespace glb
     #define P_RIGHT_BACK_LIFT 'G'
     #define P_CHAIN_CLAMP 'F'
     #define P_FRONT_CLAMP 'C'
-    #define P_GOAL_COVER 'B' 
+    #define P_GOAL_COVER 'E'
+    #define P_TWO_DEPLOY 'D'
     // misc
     #define P_IMU 11
 
@@ -104,6 +105,7 @@ namespace glb
     obj::Piston rback_lift(P_RIGHT_BACK_LIFT, false);
     obj::Piston chain_clamp(P_CHAIN_CLAMP, false);
     obj::Piston goal_cover(P_GOAL_COVER, false);
+    obj::Piston two_bar_deploy(P_TWO_DEPLOY, false);
 
     void init_pistons()
     {
@@ -112,6 +114,17 @@ namespace glb
         glb::lback_lift.initialize();
         glb::rback_lift.initialize();
         glb::goal_cover.initialize();
+    }
+
+    void deploy_two_bar()
+    {
+        glb::two_bar_deploy.toggle();
+    }
+    
+    void deploy_goal_cover()
+    {
+        glb::goal_cover.toggle();
+        glb::goal_cover.toggle();
     }
 }
 

@@ -15,12 +15,12 @@ namespace aut
 {
     void test()
     {
-        drive(1200);
+        drive(2000);
     }
 
     void solo_awp()
     {
-        drive(350, 100, 1200);
+        drive(300, 100, 1200);
         chain_clamp.toggle();
         drive(0, 0, 0);
         delay(300);
@@ -28,9 +28,9 @@ namespace aut
         drive(-220, 120, 1200);
         delay(400);
         rotate_to(90, 1500, 1.15);
-        drive(-730, 120, 3000);
+        drive(-690, 120, 3000);
         rotate_to(0, 2000, 1.15);
-        drive(3480, 100, 4000);
+        drive(3570, 95, 4000);
         front_clamp.toggle();
         rotate_to(-5, 1000, 2.5);
         drive(-2000, 90, 3000);
@@ -104,14 +104,21 @@ namespace aut
     
     void b_deelev_neu()
     {
-        drive(-150, 120, 500, 100, 0);
+        deploy_two_bar();
+        deploy_goal_cover();
+        spin_dist(-150);
         toggle_2bar();
-        drive(-1600, 120, 1500, 100, 0);
+        spin_dist(-1400);
         goal_cover.toggle();
-        drive(-400, 120, 1500, 100, 0);
-        drive(-20, 120, 4000, 100, 2000);
+        spin_dist(-250);
         toggle_2bar();
-        drive(900);
+        drive(-250, 120, 1500, 10, 1500);
+        ideal_degree = -85;
+        curve(900, 90, 1500, 1.0, 0);
+        spin_dist(250, 60);
+        chain_clamp.toggle();
+        rotate_to(40);
+        drive(1600);
     }
 
     // callable list of autons

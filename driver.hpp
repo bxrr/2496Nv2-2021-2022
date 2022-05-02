@@ -4,6 +4,7 @@
 #include "main.h"
 #include "global.hpp"
 #include "autons.hpp"
+#include "aut_func.hpp"
 #include <string>
 
 using namespace glb;
@@ -236,6 +237,8 @@ void calibrate_robot()
 {
     glb::imu.reset();
     mtr::reset_pos(mtr::chas);
+    fnc::global_heading = 0;
+    fnc::ideal_degree = 0;
 }
 
 #endif 

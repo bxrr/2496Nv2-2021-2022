@@ -9,8 +9,8 @@
 
 namespace fnc
 {
-    #define IMU_CURVE_KP 8
-    #define IMU_DRIVE_KP 15
+    #define IMU_CURVE_KP 16
+    #define IMU_DRIVE_KP 10
 
     double global_heading = 0;
     double ideal_degree = 0;

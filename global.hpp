@@ -75,13 +75,13 @@ namespace glb
     #define P_RIGHT_MID_BACK 19
     #define P_RIGHT_BACK 15
     // pistons
-    #define P_PTO 'A'
+    #define P_PTO 'D'
     #define P_LEFT_BACK_LIFT 'H'
     #define P_RIGHT_BACK_LIFT 'G'
     #define P_CHAIN_CLAMP 'F'
-    #define P_FRONT_CLAMP 'C'
-    #define P_GOAL_COVER 'E'
-    #define P_TWO_DEPLOY 'D'
+    #define P_FRONT_CLAMP 'B'
+    #define P_GOAL_COVER 'C'
+    #define P_TWO_DEPLOY 'A'
     // misc
     #define P_IMU 11
 
@@ -118,7 +118,7 @@ namespace glb
 
     void deploy_two_bar()
     {
-        glb::two_bar_deploy.toggle();
+        glb::two_bar_deploy.set(true);
     }
     
     void deploy_goal_cover()

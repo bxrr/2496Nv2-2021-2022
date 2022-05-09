@@ -19,7 +19,7 @@ void initialize()
     mtr::set_brake(hold, front);
 
     auton = auton_selector(aut_name);
-    bool start_8m = (aut_name == "solo_awp") ? false : true;
+    bool start_8m = (aut_name == "solo_awp" || aut_name == "slow_awp" || aut_name == "half_tree" || aut_name == "half_awp") ? false : true;
 
     glb::con.clear();
     mtr::reset_pos();
@@ -55,7 +55,7 @@ void opcontrol()
         {
             // driver.hpp control functions
             PTO_control();
-            arcade_drive(PTO.status());
+            arcade_drive(PTO.status(), s_hold_control());
             chainbar_control();
             twobar_control();
             clamp_control();
@@ -64,6 +64,7 @@ void opcontrol()
             
             if(glb::con.get_digital(pros::E_CONTROLLER_DIGITAL_DOWN)) autonomous();
             if(glb::con.get_digital(pros::E_CONTROLLER_DIGITAL_RIGHT)) calibrate_robot();
+            
         }
         else
         {

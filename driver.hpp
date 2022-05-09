@@ -96,7 +96,26 @@ fptr auton_selector(std::string &aut_name)
     }
 }
 
-void arcade_drive(bool all_motors)
+bool s_hold_control()
+{
+    static bool s_hold = false;
+    static bool first = true;
+    if(glb::con.get_digital(pros::E_CONTROLLER_DIGITAL_A))
+    {
+        if(first)
+        {
+            s_hold = !s_hold;
+            first = false;
+        }
+    }
+    else
+    {
+        first = true;
+    }
+    return s_hold;
+}
+
+void arcade_drive(bool all_motors, bool s_hold=false)
 {
     Mode mode;
     if(all_motors) mode = all;
@@ -112,7 +131,7 @@ void arcade_drive(bool all_motors)
 
     else
     {
-        if(abs(glb::imu.get_pitch()) > 6 && abs(imu.get_pitch()) < 45)
+        if(abs(glb::imu.get_pitch()) > 6 && abs(imu.get_pitch()) < 45 && s_hold)
         {
             mtr::spin(glb::imu.get_pitch() * 1.5, mode);
         }

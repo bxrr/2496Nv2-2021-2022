@@ -196,7 +196,7 @@ namespace fnc
         return error;
     }
 
-    void spin_dist(double distance, double speed=120, int timeout=5000)
+    void spin_dist(double distance, double speed=127, int timeout=5000)
     {
         // variables
         glb::imu.set_heading(180);
